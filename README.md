@@ -15,6 +15,7 @@ dir structure:
 │   └── GTSRB
 ├── figures
 │   └── draw.txt
+├── models
 ├── paper
 │   └── wow.tex
 ├── README.md
@@ -25,4 +26,8 @@ dir structure:
     ├── main.py
     ├── model
     └── preprocess
+
+13 directories, 5 files
 ```
+
+note data and models dir are in gitignore as they hold large files.
