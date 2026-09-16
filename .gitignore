@@ -1,8 +1,9 @@
 *data/
-*models/
+# *models/
 *.venv/
 *venv/
-*.vscode/
+*.vscode/*.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
