@@ -44,7 +44,7 @@ def process_ctsd(base_path, test_size=0.2, random_state=42):
                 cropped_img.save(save_path)
 
     crop_and_save(train_df, "train")
-    crop_and_save(test_df, "test_clean")
+    crop_and_save(test_df, "test")  
 
 def process_gtsrb(base_path):
     """Processes GTSRB train and test CSV files and crops ROIs."""
@@ -80,12 +80,12 @@ def process_gtsrb(base_path):
                 cropped_img.save(save_path)
 
     crop_and_save("Train.csv", "train")
-    crop_and_save("Test.csv", "test_clean")
+    crop_and_save("Test.csv", "test")
 
 if __name__ == "__main__":
     # Adjust paths if your root folders differ
-    ctsd_dir = "data/raw_data/chinese-traffic-signs/"
-    gtsrb_dir = "data/raw_data/gtsrb-german-traffic-sign/"
+    ctsd_dir = "data/raw_data/CTSD/"
+    gtsrb_dir = "data/raw_data/GTSRB/"
     
     if os.path.exists(ctsd_dir):
         process_ctsd(ctsd_dir)
