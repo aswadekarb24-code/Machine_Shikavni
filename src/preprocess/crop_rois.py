@@ -31,7 +31,7 @@ def process_ctsd(base_path, test_size=0.2, random_state=42):
             if not os.path.exists(img_path):
                 continue
             
-            # Destination: /OUTPUT_DIR/CTSD///
+            # Destination: data/processed_data/CTSD/train|test/class_id/
             save_dir = os.path.join(OUTPUT_DIR, "CTSD", split_type, str(int(row['category'])))
             os.makedirs(save_dir, exist_ok=True)
             
@@ -67,7 +67,7 @@ def process_gtsrb(base_path):
             if not os.path.exists(img_path):
                 continue
             
-            # Destination: /OUTPUT_DIR/GTSRB///
+            # Destination: data/processed_data/GTSRB/train|test/class_id/
             save_dir = os.path.join(OUTPUT_DIR, "GTSRB", split_type, str(int(row['ClassId'])))
             os.makedirs(save_dir, exist_ok=True)
             
@@ -82,13 +82,83 @@ def process_gtsrb(base_path):
     crop_and_save("Train.csv", "train")
     crop_and_save("Test.csv", "test")
 
+def process_btsd(base_path):
+    """Processes Belgium (BTSD/BelgiumTSC) train/test directories and crops ROIs."""
+    
+    def crop_and_save(folder_name, split_type):
+        split_path = os.path.join(base_path, folder_name)
+        
+        # Check alternative folder names if nested inside subfolders
+        if not os.path.exists(split_path):
+            alt_path = os.path.join(base_path, f"BelgiumTSC_{folder_name}")
+            if os.path.exists(alt_path):
+                split_path = alt_path
+            else:
+                print(f"Warning: {split_path} not found. Skipping.")
+                return
+
+        # Locate all annotation CSV files (e.g. GT-00000.csv) in class directories
+        csv_files = []
+        for root, _, files in os.walk(split_path):
+            for file in files:
+                if file.startswith("GT-") and file.endswith(".csv"):
+                    csv_files.append(os.path.join(root, file))
+
+        if not csv_files:
+            print(f"Warning: No annotation CSV files found in {split_path}.")
+            return
+
+        print(f"Processing BTSD [{split_type}]...")
+        for csv_path in csv_files:
+            dir_path = os.path.dirname(csv_path)
+            
+            # Belgium TSC CSV files use semicolon separators
+            a = pd.read_csv(csv_path, sep=";")
+            a.columns = a.columns.str.strip()
+            
+            # Standardize column naming to match GTSRB format (case-insensitive fixing)
+            col_map = {
+                'Roi.x1': 'Roi.X1', 'Roi.y1': 'Roi.Y1',
+                'Roi.x2': 'Roi.X2', 'Roi.y2': 'Roi.Y2'
+            }
+            a = a.rename(columns=col_map)
+            
+            # Filter out invalid bounding boxes
+            valid_boxes = (a['Roi.X2'] > a['Roi.X1']) & (a['Roi.Y2'] > a['Roi.Y1'])
+            a = a[valid_boxes].dropna().reset_index(drop=True)
+
+            for idx, row in a.iterrows():
+                img_path = os.path.join(dir_path, row['Filename'])
+                if not os.path.exists(img_path):
+                    continue
+
+                class_id = int(row['ClassId'])
+                # Destination: data/processed_data/BTSD/train|test/class_id/
+                save_dir = os.path.join(OUTPUT_DIR, "BTSD", split_type, str(class_id))
+                os.makedirs(save_dir, exist_ok=True)
+
+                with Image.open(img_path) as img:
+                    crop_box = (row['Roi.X1'], row['Roi.Y1'], row['Roi.X2'], row['Roi.Y2'])
+                    cropped_img = img.crop(crop_box)
+
+                    filename = os.path.basename(row['Filename'])
+                    filename_no_ext = os.path.splitext(filename)[0]
+                    save_path = os.path.join(save_dir, f"{idx}_{filename_no_ext}.png")
+                    cropped_img.convert("RGB").save(save_path)
+
+    crop_and_save("Training", "train")
+    crop_and_save("Testing", "test")
+
 if __name__ == "__main__":
-    # Adjust paths if your root folders differ
     ctsd_dir = "data/raw_data/CTSD/"
     gtsrb_dir = "data/raw_data/GTSRB/"
+    btsd_dir = "data/raw_data/BTSD/"
     
     if os.path.exists(ctsd_dir):
         process_ctsd(ctsd_dir)
     
     if os.path.exists(gtsrb_dir):
         process_gtsrb(gtsrb_dir)
+
+    if os.path.exists(btsd_dir):
+        process_btsd(btsd_dir)
