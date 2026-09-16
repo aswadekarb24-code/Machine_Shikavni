@@ -1,1 +1,0 @@
-# jarvis solve ts
