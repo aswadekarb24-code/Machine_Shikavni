@@ -23,6 +23,9 @@ ctsd_test_dir = "data/processed_data/CTSD/test/"
 gtsrb_train_dir = "data/processed_data/GTSRB/train/"
 gtsrb_test_dir = "data/processed_data/GTSRB/test/"
 
+btsd_train_dir = "data/processed_data/BTSD/train/"
+btsd_test_dir = "data/processed_data/BTSD/test/"
+
 # Helper function to fix string-sorting issue in ImageFolder
 def fix_numeric_labels(dataset):
     """Re-maps targets to match the actual integer value of the folder names."""
@@ -43,6 +46,12 @@ fix_numeric_labels(gtsrb_train_dataset)
 gtsrb_test_dataset = datasets.ImageFolder(root=gtsrb_test_dir, transform=transform_pipeline)
 fix_numeric_labels(gtsrb_test_dataset)
 
+btsd_train_dataset = datasets.ImageFolder(root=btsd_train_dir, transform=transform_pipeline)
+fix_numeric_labels(btsd_train_dataset)
+
+btsd_test_dataset = datasets.ImageFolder(root=btsd_test_dir, transform=transform_pipeline)
+fix_numeric_labels(btsd_test_dataset)
+
 # 5. Create DataLoaders
 a_ctsd_train_loader = DataLoader(ctsd_train_dataset, batch_size=BATCH_SIZE, shuffle=True, pin_memory=True)
 a_ctsd_test_loader = DataLoader(ctsd_test_dataset, batch_size=BATCH_SIZE, shuffle=False, pin_memory=True)
@@ -50,12 +59,16 @@ a_ctsd_test_loader = DataLoader(ctsd_test_dataset, batch_size=BATCH_SIZE, shuffl
 a_gtsrb_train_loader = DataLoader(gtsrb_train_dataset, batch_size=BATCH_SIZE, shuffle=True, pin_memory=True)
 a_gtsrb_test_loader = DataLoader(gtsrb_test_dataset, batch_size=BATCH_SIZE, shuffle=False, pin_memory=True)
 
+a_btsd_train_loader = DataLoader(btsd_train_dataset, batch_size=BATCH_SIZE, shuffle=True, pin_memory=True)
+a_btsd_test_loader = DataLoader(btsd_test_dataset, batch_size=BATCH_SIZE, shuffle=False, pin_memory=True)
+
 # Sanity Check
 print(f"CTSD Train Samples: {len(ctsd_train_dataset)}")
 print(f"GTSRB Train Samples: {len(gtsrb_train_dataset)}")
+print(f"BTSD Train Samples: {len(btsd_train_dataset)}")
 
 # Grab one batch to verify shapes and integer class range
-images, labels = next(iter(a_ctsd_train_loader))
-print(f"Batch Image shape: {images.shape}")  # Expected: [64, 3, 32, 32]
+a, labels = next(iter(a_ctsd_train_loader))
+print(f"Batch Image shape: {a.shape}")  # Expected: [64, 3, 32, 32]
 print(f"Batch Label shape: {labels.shape}")  # Expected: [64]
 print(f"Sample labels from batch: {labels[:10].tolist()}")
