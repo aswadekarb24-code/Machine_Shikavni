@@ -8,8 +8,7 @@ import torchvision.transforms.v2 as transforms
 import numpy as np
 from sklearn.metrics import f1_score, confusion_matrix
 import matplotlib.pyplot as plt
-
-from preprocess.dataset import a_gtsrb_train_loader, a_gtsrb_test_loader
+from src.preprocess.dataset import a_gtsrb_train_loader, a_gtsrb_test_loader, a_ctsd_train_loader, a_ctsd_test_loader
 
 # 1. Device Setup
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -132,4 +131,5 @@ for epoch in range(1, EPOCHS + 1):
           f"Test Loss: {test_loss:.4f} Acc: {test_acc:.4f} F1: {test_f1:.4f}")
 
 # Save the baseline model for Phase 3 noise evaluation
-torch.save(model.state_dict(), "gtsrb_baseline_cnn.pth")
+
+# torch.save(model.state_dict(), "gtsrb_baseline_cnn.pth")
