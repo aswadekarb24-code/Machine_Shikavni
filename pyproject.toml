@@ -1,0 +1,19 @@
+[project]
+name = "ml-proj-handwritten"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "imagecorruptions>=1.1.2",
+    "pandas>=3.0.6",
+    "pillow>=12.3.0",
+    "pip>=26.2.1",
+    "ruff>=0.16.8",
+    "scikit-learn>=1.9.1",
+    "setuptools>=84.0.0",
+    "torch>=2.14.0",
+    "torchvision>=0.29.0",
+    "tqdm>=4.70.1",
+]
