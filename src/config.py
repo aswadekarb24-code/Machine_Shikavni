@@ -6,3 +6,5 @@ RAW_DIR = "data/raw_data/"
 CHECKPOINT = "checkpoints/"
 
 RESULTS="results/"
+
+EXTDIR = '/mnt/test_bench/MLPROJ/corruptdata/'

@@ -37,7 +37,7 @@ def train_1(model, loader, optimizer, criterion,scaler):
     macf1 = f1_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
     prec = precision_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
     rec = recall_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
-    return cumloss/tot, ok/tot,macf1,prec,rec
+    return cumloss/tot, ok/tot,macf1,prec,rec, nums_y_, nums_y
 
 def evaluate(model, loader, criterion):
     cumloss, nums_y_, nums_y = 0.0,[],[]
@@ -59,7 +59,7 @@ def evaluate(model, loader, criterion):
     macf1 = f1_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
     prec = precision_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
     rec = recall_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
-    return cumloss/tot,acc,macf1,prec,rec
+    return cumloss/tot,acc,macf1,prec,rec, nums_y_, nums_y
 
 def train(datanm, epochs = 50, useprob=False, cprob =0.5, batch_size =BATCH_SIZE, in_channels=3):
     print(f"Training : {datanm} Dataset, noise = {useprob}")
@@ -77,13 +77,13 @@ def train(datanm, epochs = 50, useprob=False, cprob =0.5, batch_size =BATCH_SIZE
     history =[]
     if os.path.exists(modelpath):
         model.load_state_dict(torch.load(modelpath))
-        _, _, tstf1, _, _= evaluate(model, testld, criterion)
+        _, _, tstf1, _, _, _, _= evaluate(model, testld, criterion)
         bestf1 =tstf1
 
     os.makedirs(os.path.dirname(modelpath),exist_ok=True)
     for epoch in range(1,epochs+1):
-        trloss, tracc, trf1, trprec, trrec = train_1(model,trainld, optimizer,criterion,scaler)
-        tstloss, tstacc, tstf1,tstprec,tstrec = evaluate(model,testld,criterion)
+        trloss, tracc, trf1, trprec, trrec, _, _ = train_1(model,trainld, optimizer,criterion,scaler)
+        tstloss, tstacc, tstf1,tstprec,tstrec, _ , _ = evaluate(model,testld,criterion)
         scheduler.step()
         history.append({
             'train loss' : trloss, 'train accuracy' : tracc,
@@ -93,10 +93,10 @@ def train(datanm, epochs = 50, useprob=False, cprob =0.5, batch_size =BATCH_SIZE
             'test precision' : tstprec, 'test recall' : tstrec,
         })
 
-        if epoch % 10 == 0 or epoch == 1 or epoch == epochs:
-            print(f"Epoch: {epoch:03d}/{epochs:03d}")
-            print(f"Train loss : {trloss} | Train acc : {tracc} | Train f1 : {trf1}")
-            print(f"Test loss : {tstloss} | Test acc : {tstacc} | Test f1 : {tstf1}")
+        # if epoch % 10 == 0 or epoch == 1 or epoch == epochs:
+        print(f"Epoch: {epoch:03d}/{epochs:03d}")
+        print(f"Train loss : {trloss} | Train acc : {tracc} | Train f1 : {trf1}")
+        print(f"Test loss : {tstloss} | Test acc : {tstacc} | Test f1 : {tstf1}")
 
         if tstf1 > bestf1:
             bestf1 = tstf1
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     #     train(datanm=ds,epochs=50)
 
     for ds in ['GTSRB','CTSD','BTSD']:
-        train(datanm=ds,epochs=50,useprob=True)
+        train(datanm=ds,epochs=200,useprob=True, cprob=0.9,batch_size=256)
     
         
 

@@ -1,13 +1,17 @@
 import os
+import numpy as np
 import pandas as pd
 import torch
+from datetime import datetime
 
 from src.config import CHECKPOINT
 from src.models.cnn import TrialCNN
 from src.models.helper import get_criterion
 from src.noises.corruptions import CORRUPTIONS
 from src.noises.noiseloader import cloader
+from src.noises.precorrupt import pre_cloader
 from src.train import evaluate
+from src.config import EXTDIR
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else'cpu')
 corruptions = list(CORRUPTIONS.keys())
@@ -33,11 +37,15 @@ for ds in dsets:
     if not os.path.exists(modelpath):
         raise FileNotFoundError(f"Model:{modelpath} not found")
     model.load_state_dict(torch.load(modelpath))
+    confmat = np.zeros((dset_n_classes[ds],dset_n_classes[ds]))
     for corr in corruptions:
         for sev in severities:
-            loader = cloader(ds, CORRUPTIONS[corr],sev)
+            fg = os.path.exists(EXTDIR)
+            loader = pre_cloader(ds,'test',useprob=True, cprob=1.0) if fg else cloader(ds, CORRUPTIONS[corr],sev)
             criterion = get_criterion(ds)
-            tstloss, tstacc, tstf1,tstprec,tstrec = evaluate(model,loader,criterion)
+            tstloss, tstacc, tstf1,tstprec,tstrec, ypreds, ytrues = evaluate(model,loader,criterion)
+            for ytrue, ypred in zip(ytrues, ypreds):
+                confmat[ytrue][ypreds] += 1
             results.append({
                 'Dataset':ds, 'Corruption':corr, 'Severity' : sev,
                 'loss' : tstloss, 'accuracy' : tstacc, 'f1 score' : tstf1,
@@ -46,5 +54,11 @@ for ds in dsets:
             print(f"Dataset:{ds}, Corruption:{corr}, Severity : {sev}")
             print(f"loss : {tstloss}, accuracy : {tstacc}, f1 score : {tstf1}")
             print(f"precision : {tstprec}, recall : {tstrec}")
+    df = pd.DataFrame()
+    df['true'] = [i for i in range(dset_n_classes[ds])]
+    for i in range(len(confmat[0])):
+        for j in range(len(confmat)):
+            df[str(i)] = confmat[j][i]
+    df.to_csv(f'{ds}_noise_conf_mat_{datetime.now()}.csv',index=False)
 
-pd.DataFrame(results).to_csv('noise_results.csv',index=False)
+pd.DataFrame(results).to_csv(f'noise_results_{datetime.now()}.csv',index=False)

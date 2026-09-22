@@ -2,6 +2,7 @@ from torch.utils.data import DataLoader
 
 from src.config import BATCH_SIZE
 from src.noises.noisedataset import ProbabilisticCorruptData
+from src.noises.precorrupt import pre_cdata
 from src.preproc.makedat import (
     b_testdat,
     b_traindat,
@@ -11,6 +12,8 @@ from src.preproc.makedat import (
     g_traindat,
     tform,
 )
+import os
+from src.config import EXTDIR
 
 datamp ={
     'GTSRB': {'train' : g_traindat, 'test': g_testdat,'n_classes':43},
@@ -24,8 +27,9 @@ def getloader(dataset, batch_size = BATCH_SIZE, useprob=False, cprob=0.5):
         raise ValueError("Dataset does not have torch dataset")
 
     train,test = conf['train'],conf['test']
-
-    if useprob:
+    if os.path.exists(EXTDIR):
+        train, test = pre_cdata(dataset,'train', useprob,cprob), pre_cdata(dataset,'test', useprob,cprob)
+    elif useprob:
         train = ProbabilisticCorruptData(train,cprob=cprob,transform=tform)
 
     trainld = DataLoader(
