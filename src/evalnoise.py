@@ -16,11 +16,11 @@ from src.config import EXTDIR
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else'cpu')
 corruptions = list(CORRUPTIONS.keys())
 severities = [1,2,3,4,5]
-dsets = ['GTSRB','CTSD','BTSD']
+dsets = ['BTSD', 'CTSD'] # ['GTSRB','CTSD','BTSD']
 dsetmp = {
     'GTSRB' : os.path.join(CHECKPOINT, 'gtsrb_mixed.pth'),
     'CTSD' : os.path.join(CHECKPOINT, 'ctsd_mixed.pth'),
-    'BTSD' : os.path.join(CHECKPOINT, 'btsd_mixed.pth'),
+    'BTSD' : os.path.join(CHECKPOINT, 'btsd_fullnoise.pth'),
 }
 
 dset_n_classes = {

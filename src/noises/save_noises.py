@@ -4,6 +4,7 @@ from tqdm import tqdm
 from PIL import Image
 
 from src.noises.corruptions import CORRUPTIONS, corruptimg
+from src.config import EXTDIR
 
 from src.preproc.makedat import (
     g_traindat, g_testdat,
@@ -18,7 +19,6 @@ dsetmp = {
     'CTSD' : {'train':c_traindat, 'test':c_testdat}
 }
 
-EXTDIR = '/mnt/test_bench/MLPROJ/corruptdata/'
 os.makedirs(EXTDIR,exist_ok=True)
 for corr in CORRUPTIONS.keys():
     for sev in SEVERITIES:

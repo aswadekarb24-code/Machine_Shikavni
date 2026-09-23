@@ -4,7 +4,7 @@ import os
 import numpy as np
 import random
 from src.config import BATCH_SIZE
-from src.noises.corruptions import CORRUPTIONS, corruptimg
+from src.noises.corruptions import CORRUPTIONS
 from src.preproc.makedat import (
     g_traindat,c_traindat,b_traindat,
     b_testdat, c_testdat, g_testdat, tform

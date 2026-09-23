@@ -8,7 +8,7 @@ from torch import optim
 from src.config import BATCH_SIZE, CHECKPOINT, RESULTS
 from src.models.cnn import TrialCNN
 from src.models.helper import get_criterion
-from src.preproc.factory import getloader
+from src.preproc.factory import getloader, get_fulllloader
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else'cpu')
 
@@ -34,9 +34,9 @@ def train_1(model, loader, optimizer, criterion,scaler):
 
         nums_y_.extend(y_.cpu().numpy())
         nums_y.extend(y.cpu().numpy())
-    macf1 = f1_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
-    prec = precision_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
-    rec = recall_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
+    macf1 = f1_score(y_pred=nums_y_,y_true=nums_y,average='weighted',zero_division=0)
+    prec = precision_score(y_pred=nums_y_,y_true=nums_y,average='weighted',zero_division=0)
+    rec = recall_score(y_pred=nums_y_,y_true=nums_y,average='weighted',zero_division=0)
     return cumloss/tot, ok/tot,macf1,prec,rec, nums_y_, nums_y
 
 def evaluate(model, loader, criterion):
@@ -56,14 +56,14 @@ def evaluate(model, loader, criterion):
 
     tot = len(nums_y_)
     acc = accuracy_score(y_pred=nums_y_,y_true=nums_y)
-    macf1 = f1_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
-    prec = precision_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
-    rec = recall_score(y_pred=nums_y_,y_true=nums_y,average='macro',zero_division=0)
+    macf1 = f1_score(y_pred=nums_y_,y_true=nums_y,average='weighted',zero_division=0)
+    prec = precision_score(y_pred=nums_y_,y_true=nums_y,average='weighted',zero_division=0)
+    rec = recall_score(y_pred=nums_y_,y_true=nums_y,average='weighted',zero_division=0)
     return cumloss/tot,acc,macf1,prec,rec, nums_y_, nums_y
 
-def train(datanm, epochs = 50, useprob=False, cprob =0.5, batch_size =BATCH_SIZE, in_channels=3):
+def train(datanm, epochs = 50, useprob=False, cprob =0.5, batch_size =BATCH_SIZE, in_channels=3, use_full_noise=False):
     print(f"Training : {datanm} Dataset, noise = {useprob}")
-    trainld, testld, nclasses = getloader(dataset=datanm, batch_size=BATCH_SIZE, useprob=useprob,cprob=cprob)
+    trainld, testld, nclasses = getloader(dataset=datanm, batch_size=BATCH_SIZE, useprob=useprob,cprob=cprob) if not use_full_noise else get_fulllloader(dataset=datanm,batch_size=batch_size)
 
     model = TrialCNN(in_channels = in_channels, n_classes =nclasses).to(DEVICE)
     criterion = get_criterion(datanm)
@@ -71,7 +71,7 @@ def train(datanm, epochs = 50, useprob=False, cprob =0.5, batch_size =BATCH_SIZE
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max=epochs)
     scaler = torch.amp.GradScaler('cuda', enabled = (DEVICE.type =='cuda'))
 
-    suffix = 'mixed' if useprob else 'clean'
+    suffix = 'fullnoise' if use_full_noise else 'mixed' if useprob else 'clean'
     modelpath = os.path.join(CHECKPOINT, f'{datanm.lower()}_{suffix}.pth')
     bestf1 = 0.0
     history =[]
@@ -113,8 +113,11 @@ if __name__ == '__main__':
     # for ds in ['GTSRB','CTSD','BTSD']:
     #     train(datanm=ds,epochs=50)
 
-    for ds in ['GTSRB','CTSD','BTSD']:
-        train(datanm=ds,epochs=200,useprob=True, cprob=0.9,batch_size=256)
+    # for ds in ['GTSRB','CTSD','BTSD']:
+    #     train(datanm=ds,epochs=200,useprob=True, cprob=0.9,batch_size=256)
+        
+    for ds in ['BTSD','CTSD']:
+        train(datanm=ds,epochs=10,useprob=True, cprob=0.9,batch_size=128, use_full_noise=True)
     
         
 

@@ -197,6 +197,8 @@ CORRUPTIONS = {
     "elastic_transform":"elastic_transform",
     "pixelate":"pixelate",
 }
+
+SEVERITIES = [1,2,3,4,5]
 from imagecorruptions import corrupt
 def corruptimg(img:Image.Image, corruption, severity=1):
     og_h, og_w = img.height, img.width

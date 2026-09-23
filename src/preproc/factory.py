@@ -3,6 +3,7 @@ from torch.utils.data import DataLoader
 from src.config import BATCH_SIZE
 from src.noises.noisedataset import ProbabilisticCorruptData
 from src.noises.precorrupt import pre_cdata
+from src.noises.fullnoisedset import fpre_cdata
 from src.preproc.makedat import (
     b_testdat,
     b_traindat,
@@ -42,5 +43,23 @@ def getloader(dataset, batch_size = BATCH_SIZE, useprob=False, cprob=0.5):
     )
     return trainld,testld,conf['n_classes']
     
+def get_fulllloader(dataset, batch_size = BATCH_SIZE):
+    conf = datamp.get(dataset,None)
+    if conf is None:
+        raise ValueError("Dataset does not have torch dataset")
+
+    train,test = conf['train'],conf['test']
+    if os.path.exists(EXTDIR):
+        train, test = fpre_cdata(dataset,'train'), fpre_cdata(dataset,'test')
+    else:
+        raise NotADirectoryError("FULL NOISE DATA NOT FOUND")
     
-    
+    trainld = DataLoader(
+        train, batch_size=batch_size,shuffle=True,
+        num_workers=4,pin_memory=True
+    )
+    testld = DataLoader(
+        test, batch_size=batch_size,shuffle=False,
+        num_workers=4,pin_memory=True
+    )
+    return trainld,testld,conf['n_classes']
