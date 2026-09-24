@@ -40,6 +40,7 @@ def train_1(model, loader, optimizer, criterion,scaler):
     return cumloss/tot, ok/tot,macf1,prec,rec, nums_y_, nums_y
 
 def evaluate(model, loader, criterion):
+    model.eval()
     cumloss, nums_y_, nums_y = 0.0,[],[]
 
     with torch.no_grad():
