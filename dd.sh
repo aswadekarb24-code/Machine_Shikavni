@@ -48,3 +48,14 @@ rm "$RAW_DIR/BTSD/belgium-ts.zip"
 
 echo "------------------------------------------------"
 echo "All datasets downloaded and extracted successfully into $RAW_DIR!"
+
+echo "------------------------------------------------"
+echo "Preprocessing Data..."
+python -m src.preproc.crop
+
+echo "------------------------------------------------"
+echo "Running Dataloaders..."
+python -m src.preproc.factory
+
+echo "------------------------------------------------"
+echo "Setup and preprocessing completed successfully!"
