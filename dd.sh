@@ -4,6 +4,16 @@ set -e
 
 RAW_DIR="data/raw_data"
 
+echo "------------------------------------------------"
+echo "Setting up Python virtual environment..."
+
+python -m venv .venv
+
+echo "Installing Python dependencies..."
+source .venv/bin/activate
+pip install -r requirements.txt
+
+echo "------------------------------------------------"
 echo "Creating raw data directories..."
 mkdir -p "$RAW_DIR/CTSD"
 mkdir -p "$RAW_DIR/GTSRB"
