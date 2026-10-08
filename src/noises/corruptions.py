@@ -186,7 +186,7 @@ CORRUPTIONS = {
     "shot_noise":"shot_noise",
     "impulse_noise":"impulse_noise",
     "defocus_blur":"defocus_blur",
-    "glass_blur":"glass_blur",
+    "jpeg_compression":"jpeg_compression",
     "motion_blur":"motion_blur",
     "zoom_blur":"zoom_blur",
     "snow":"snow",

@@ -131,14 +131,14 @@ if __name__ == '__main__':
     models_to_train = ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
     
     for model_name in models_to_train:
-        for ds in ['BTSD', 'CTSD']:
+        for ds in ['GTSRB','BTSD', 'CTSD']:
             train(
                 datanm=ds, 
                 model_name=model_name, 
                 epochs=10, 
                 useprob=True, 
-                cprob=0.9, 
+                cprob=0.0, 
                 batch_size=128, 
-                use_full_noise=True,
-                pretrained=True
+                use_full_noise=False,
+                pretrained=False
             )

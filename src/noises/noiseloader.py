@@ -48,5 +48,8 @@ def cloader(dataset,corruption,severity=1):
         cdataset,
         batch_size=BATCH_SIZE,
         shuffle=False,
-        pin_memory=True
+        num_workers=8,          # try 4, then 8 if CPU/storage can keep up
+        pin_memory=True,
+        persistent_workers=True,
+        prefetch_factor=2,
     )

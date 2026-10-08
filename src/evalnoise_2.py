@@ -10,12 +10,12 @@ from src.models.helper import get_criterion
 from src.noises.corruptions import CORRUPTIONS
 from src.noises.noiseloader import cloader
 from src.noises.precorrupt import pre_cloader
-from src.train import evaluate
+from src.train_2 import evaluate
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 corruptions = list(CORRUPTIONS.keys())
 severities = [1, 2, 3, 4, 5]
-dsets = ['BTSD', 'CTSD']
+dsets = ['GTSRB','BTSD', 'CTSD']
 models_to_eval = ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
 
 dset_n_classes = {
@@ -24,9 +24,9 @@ dset_n_classes = {
     'BTSD': 62
 }
 
-SUFFIX = 'fullnoise'
+SUFFIX = 'mixed'
 results = []
-
+print(f"Training on device: {DEVICE}")
 for ds in dsets:
     n_cls = dset_n_classes[ds]
     for model_name in models_to_eval:
