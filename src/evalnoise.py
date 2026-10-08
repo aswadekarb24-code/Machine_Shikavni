@@ -10,7 +10,7 @@ from src.models.helper import get_criterion
 from src.noises.corruptions import CORRUPTIONS
 from src.noises.noiseloader import cloader
 from src.noises.precorrupt import pre_cloader
-from src.train_2 import evaluate
+from train import evaluate
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 corruptions = list(CORRUPTIONS.keys())
