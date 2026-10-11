@@ -70,8 +70,8 @@ def train(
     epochs=50, 
     useprob=False, 
     cprob=0.5, 
-    batch_size=BATCH_SIZE, 
-    in_channels=3, 
+    batch_size=BATCH_SIZE,
+    in_channels=1,
     use_full_noise=False,
     pretrained=False
 ):
@@ -135,7 +135,7 @@ if __name__ == '__main__':
             train(
                 datanm=ds, 
                 model_name=model_name, 
-                epochs=10, 
+                epochs=100, 
                 useprob=True, 
                 cprob=0.0, 
                 batch_size=128, 

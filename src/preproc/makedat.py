@@ -7,12 +7,14 @@ from torchvision import datasets
 
 from src.config import BATCH_SIZE, IMG_SIZE, PROCESSED_DIR
 
-tform = transforms.Compose([
-    transforms.Resize((IMG_SIZE,IMG_SIZE)),
-    transforms.ToImage(),
-    transforms.ToDtype(torch.float32,scale=True),
-    transforms.Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5])
-])
+from src.preproc.transforms import tform_robust as tform
+
+# tform = transforms.Compose([
+#     transforms.Resize((IMG_SIZE,IMG_SIZE)),
+#     transforms.ToImage(),
+#     transforms.ToDtype(torch.float32,scale=True),
+#     transforms.Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5])
+# ])
 
 gdir_train, gdir_test = os.path.join(PROCESSED_DIR,'GTSRB','train'),os.path.join(PROCESSED_DIR,'GTSRB','test')
 bdir_train, bdir_test = os.path.join(PROCESSED_DIR,'BTSD','train'),os.path.join(PROCESSED_DIR,'BTSD','test')

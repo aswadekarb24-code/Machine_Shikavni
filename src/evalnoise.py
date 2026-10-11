@@ -4,13 +4,13 @@ import pandas as pd
 import torch
 from datetime import datetime
 
-from src.config import CHECKPOINT, EXTDIR
+from src.config import CHECKPOINT, EXTDIR, RESULTS
 from src.models.factory import get_model
 from src.models.helper import get_criterion
 from src.noises.corruptions import CORRUPTIONS
 from src.noises.noiseloader import cloader
 from src.noises.precorrupt import pre_cloader
-from train import evaluate
+from src.train import evaluate
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 corruptions = list(CORRUPTIONS.keys())
@@ -40,7 +40,7 @@ for ds in dsets:
         print(f"Evaluating: {model_name.upper()} | Dataset: {ds}")
         print(f"==========================================")
         
-        model = get_model(model_name, in_channels=3, n_classes=n_cls).to(DEVICE)
+        model = get_model(model_name, in_channels=1, n_classes=n_cls).to(DEVICE)
         model.load_state_dict(torch.load(modelpath, map_location=DEVICE))
         
         confmat = np.zeros((n_cls, n_cls))
@@ -73,13 +73,13 @@ for ds in dsets:
         df_cm = pd.DataFrame(confmat, columns=[str(i) for i in range(n_cls)])
         df_cm.insert(0, 'true', range(n_cls))
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        cm_filename = f'{model_name}_{ds}_noise_conf_mat_{timestamp}.csv'
+        cm_filename = os.path.join(RESULTS,f'{model_name}_{ds}_noise_conf_mat_{timestamp}.csv')
         df_cm.to_csv(cm_filename, index=False)
         print(f"Saved confusion matrix to: {cm_filename}")
 
 # Export combined corruption metrics across all evaluated models
 if results:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_csv = f'noise_results_all_models_{timestamp}.csv'
+    output_csv = os.path.join(RESULTS,f'noise_results_all_models_{timestamp}.csv')
     pd.DataFrame(results).to_csv(output_csv, index=False)
     print(f"\nSaved all model noise results to: {output_csv}")

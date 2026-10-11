@@ -10,6 +10,8 @@ from src.preproc.makedat import (
     b_testdat, c_testdat, g_testdat, tform
 )
 
+from src.preproc.transforms import tform_robust
+
 from src.config import EXTDIR
 dsetmp = {
     'GTSRB' :{'train' : g_traindat, 'test':g_testdat},
@@ -58,7 +60,7 @@ def fpre_cloader(dataset,type):
     fcdataset = FullPreCorruptData(
         dsnm=dataset,
         type=type, 
-        transform=train_tform,
+        transform=tform_robust,
     )
     return DataLoader(
         fcdataset,
@@ -74,5 +76,5 @@ def fpre_cdata(dataset,type):
     return FullPreCorruptData(
         dsnm=dataset,
         type=type,
-        transform=tform,
+        transform=tform_robust,
     )
