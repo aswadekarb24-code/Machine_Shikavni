@@ -42,3 +42,41 @@ tform_robust = transforms.Compose([
     # Note: Normalize only needs 1 value now because the image is Grayscale
     transforms.Normalize(mean=[0.5], std=[0.5]) 
 ])
+
+# ---------------------------------------------------------------------------
+# Per-member preprocessing for the corruption-specialist ensemble.
+# Each function maps one IMG_SIZE x IMG_SIZE x 3 uint8 RGB array to a
+# IMG_SIZE x IMG_SIZE uint8 grayscale array. Scaling to [-1, 1] is done by
+# src.preproc.cache.to_input, equivalent to ToDtype(scale) + Normalize(0.5, 0.5).
+# ---------------------------------------------------------------------------
+def _gray(rgb):
+    return cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+
+def _clahe(g, clip=2.0):
+    # built per call: cv2 CLAHE objects are not thread-safe
+    return cv2.createCLAHE(clipLimit=clip, tileGridSize=(4, 4)).apply(g)
+
+def noise_tform(rgb):
+    g = cv2.medianBlur(_gray(rgb), 3)
+    return cv2.bilateralFilter(g, d=3, sigmaColor=40, sigmaSpace=40)
+
+def blur_tform(rgb):
+    g = _gray(rgb)
+    soft = cv2.GaussianBlur(g, (0, 0), 1.0)
+    return cv2.addWeighted(g, 1.8, soft, -0.8, 0)
+
+def light_tform(rgb):
+    g = _gray(rgb)
+    lo, hi = np.percentile(g, (2, 98))
+    g = np.clip((g.astype(np.float32) - lo) / max(hi - lo, 1.0) * 255, 0, 255).astype(np.uint8)
+    return _clahe(g, 3.0)
+
+def weather_tform(rgb):
+    return _clahe(cv2.medianBlur(_gray(rgb), 3))
+
+def distort_tform(rgb):
+    return cv2.GaussianBlur(_gray(rgb), (0, 0), 0.8)
+
+def generalist_tform(rgb):
+    # same steps as RobustPreprocessShield
+    return _clahe(cv2.medianBlur(_gray(rgb), 3))
