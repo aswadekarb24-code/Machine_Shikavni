@@ -80,3 +80,33 @@ def distort_tform(rgb):
 def generalist_tform(rgb):
     # same steps as RobustPreprocessShield
     return _clahe(cv2.medianBlur(_gray(rgb), 3))
+
+def fog_tform(rgb, sigma=1.25, eps=8.0):
+    """Local contrast normalisation: removes the low-frequency veil that fog adds (sigma chosen by sweep)."""
+    g = _gray(rgb).astype(np.float32)
+    m = cv2.GaussianBlur(g, (0, 0), sigma)
+    v = cv2.GaussianBlur((g - m) ** 2, (0, 0), sigma)
+    x = (g - m) / (np.sqrt(v) + eps)
+    lo, hi = np.percentile(x, (1, 99))
+    return np.clip((x - lo) / max(hi - lo, 1e-3) * 255, 0, 255).astype(np.uint8)
+
+
+def _lowpass(rgb, sigma):
+    return _clahe(cv2.GaussianBlur(_gray(rgb), (0, 0), sigma))
+
+def defocus_tform(rgb):
+    """Pre-smoothing so the clean-trained net relies on low-frequency structure that survives defocus blur."""
+    return _lowpass(rgb, 2.0)
+
+def heavyblur_tform(rgb):
+    return _lowpass(rgb, 3.0)
+
+def motion_tform(rgb, sigma=1.5, iters=15):
+    """Richardson-Lucy deconvolution (Gaussian PSF); helped motion blur in the transform sweep."""
+    g = _gray(rgb).astype(np.float32) + 1
+    x = g.copy()
+    for _ in range(iters):
+        est = cv2.GaussianBlur(x, (0, 0), sigma)
+        x = x * cv2.GaussianBlur(g / (est + 1e-3), (0, 0), sigma)
+    lo, hi = np.percentile(x, (1, 99))
+    return _clahe(np.clip((x - lo) / max(hi - lo, 1e-3) * 255, 0, 255).astype(np.uint8))

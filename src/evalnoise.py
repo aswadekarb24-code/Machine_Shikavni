@@ -123,3 +123,6 @@ if results:
     output_csv = os.path.join(RESULTS,f'noise_results_all_models_{timestamp}.csv')
     pd.DataFrame(results).to_csv(output_csv, index=False)
     print(f"\nSaved all model noise results to: {output_csv}")
+
+    from src.thresholds import report
+    report(output_csv)
