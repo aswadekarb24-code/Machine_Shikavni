@@ -1,6 +1,6 @@
 """Ensemble of TrialCNNs, each with its own preprocessing and trained on 2-3 corruptions.
 
-Prediction = mean of the members' softmax probabilities.
+Prediction = confidence-weighted mean of the members' softmax probabilities.
 """
 import os
 
@@ -24,14 +24,15 @@ ALL_SEV = (1, 2, 3, 4, 5)
 ENSEMBLE_MEMBERS = {
     'noise': dict(tform=T.noise_tform, severities=ALL_SEV,
                   corruptions=['gaussian_noise', 'shot_noise', 'impulse_noise']),
-    'blur': dict(tform=T.blur_tform, severities=ALL_SEV,
-                 corruptions=['defocus_blur', 'motion_blur', 'zoom_blur']),
+    # dropped after the sweep: weakest member and removing it never hurt the ensemble (checkpoints kept on disk)
+    # 'blur': dict(tform=T.blur_tform, severities=ALL_SEV,
+    #              corruptions=['defocus_blur', 'motion_blur', 'zoom_blur']),
     'light': dict(tform=T.light_tform, severities=ALL_SEV,
                   corruptions=['brightness', 'contrast', 'fog']),
     'weather': dict(tform=T.weather_tform, severities=ALL_SEV,
                     corruptions=['snow', 'frost']),
-    'distort': dict(tform=T.distort_tform, severities=ALL_SEV,
-                    corruptions=['elastic_transform', 'pixelate', 'jpeg_compression']),
+    # 'distort': dict(tform=T.distort_tform, severities=ALL_SEV,
+    #                 corruptions=['elastic_transform', 'pixelate', 'jpeg_compression']),
     # preprocessing identical to the previous single robust transform
     'generalist': dict(tform=T.generalist_tform, severities=ALL_SEV,
                        corruptions=['gaussian_noise', 'shot_noise', 'impulse_noise', 'defocus_blur',
@@ -165,6 +166,11 @@ def member_probs(members, raw, bs=2048):
     return probs
 
 
+CONF_POWER = 4
+
+
 def ensemble_probs(probs):
-    """Probability of each class = average of its probability over all members."""
-    return torch.stack(list(probs.values())).mean(0)
+    """Confidence-weighted average: each member's weight per sample is (its top probability) ** CONF_POWER."""
+    P = torch.stack(list(probs.values()))
+    w = P.max(2, keepdim=True).values ** CONF_POWER
+    return (w * P).sum(0) / w.sum(0)
