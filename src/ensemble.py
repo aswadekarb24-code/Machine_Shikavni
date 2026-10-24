@@ -14,6 +14,7 @@ from src.config import CHECKPOINT, RESULTS
 from src.models.factory import get_model
 from src.models.helper import get_criterion
 from src.preproc import transforms as T
+from src.gating import FOG_BOOST
 from src.preproc.cache import VariantBank, apply_tform, to_input
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -177,8 +178,13 @@ def member_probs(members, raw, bs=2048):
 CONF_POWER = 4
 
 
-def ensemble_probs(probs):
-    """Confidence-weighted average: each member's weight per sample is (its top probability) ** CONF_POWER."""
+def ensemble_probs(probs, fog=None):
+    """Confidence-weighted average: each member's weight per sample is (its top probability) ** CONF_POWER.
+
+    fog: optional (N,) tensor of fog scores (src.gating.fog_score); boosts the `fog` member's weight.
+    """
     P = torch.stack(list(probs.values()))
     w = P.max(2, keepdim=True).values ** CONF_POWER
+    if fog is not None and 'fog' in probs:
+        w[list(probs).index('fog')] *= torch.exp(FOG_BOOST * torch.as_tensor(fog, dtype=w.dtype))[:, None]
     return (w * P).sum(0) / w.sum(0)

@@ -12,6 +12,7 @@ from src.noises.noiseloader import cloader
 from src.noises.precorrupt import pre_cloader
 from src.train import evaluate
 from src.ensemble import ensemble_probs, load_members, member_probs, metrics
+from src.gating import fog_score
 from src.preproc.cache import labels_of, load_raw
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -43,7 +44,7 @@ def eval_ensemble(ds, n_cls):
     for corr, sev in [('none', 0)] + [(c, s) for c in corruptions for s in severities]:
         raw = load_raw(ds, 'test', None if corr == 'none' else CORRUPTIONS[corr], sev)
         probs = member_probs(members, raw)
-        probs['ensemble'] = ensemble_probs(probs)
+        probs['ensemble'] = ensemble_probs(probs, fog_score(raw, ds))
         for name, p in probs.items():
             loss = torch.nn.functional.nll_loss(p.clamp_min(1e-8).log(), yt, weight=weight).item()
             ypred = p.argmax(1).numpy()
