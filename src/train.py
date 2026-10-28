@@ -129,23 +129,11 @@ def train(
 
 
 if __name__ == '__main__':
-    # models_to_train = ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
-    models_to_train = ['trialcnn']
+    models_to_train = ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
+    # models_to_train = ['trialcnn']
 
     for model_name in models_to_train:
         for ds in ['GTSRB','BTSD', 'CTSD']:
-            if model_name == 'trialcnn':
-                # corruption-specialist ensemble, see src/ensemble.py
-                for member in ENSEMBLE_MEMBERS:
-                    train_member(ds, member, epochs=100, batch_size=256)
-                continue
-            train(
-                datanm=ds, 
-                model_name=model_name, 
-                epochs=100, 
-                useprob=True, 
-                cprob=0.0, 
-                batch_size=128, 
-                use_full_noise=False,
-                pretrained=False
-            )
+            # Train the same corruption-specialist ensemble for every architecture.
+            for member in ENSEMBLE_MEMBERS:
+                train_member(ds, member, arch=model_name, epochs=100, batch_size=256)

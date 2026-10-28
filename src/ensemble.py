@@ -1,4 +1,4 @@
-"""Ensemble of TrialCNNs, each with its own preprocessing and trained on 2-3 corruptions.
+"""Architecture-agnostic specialist ensembles with member-specific preprocessing.
 
 Prediction = confidence-weighted mean of the members' softmax probabilities.
 """
@@ -14,11 +14,9 @@ from src.config import CHECKPOINT, RESULTS
 from src.models.factory import get_model
 from src.models.helper import get_criterion
 from src.preproc import transforms as T
-from src.gating import FOG_BOOST
 from src.preproc.cache import VariantBank, apply_tform, to_input
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-ARCH = 'trialcnn'
 N_CLASSES = {'GTSRB': 43, 'CTSD': 58, 'BTSD': 62}
 ALL_SEV = (1, 2, 3, 4, 5)
 
@@ -50,8 +48,8 @@ ENSEMBLE_MEMBERS = {
 }
 
 
-def ckpt_path(ds, member):
-    return os.path.join(CHECKPOINT, f'{ARCH}_{ds.lower()}_ens_{member}.pth')
+def ckpt_path(ds, member, arch='trialcnn'):
+    return os.path.join(CHECKPOINT, f'{arch.lower()}_{ds.lower()}_ens_{member}.pth')
 
 
 def metrics(y, y_):
@@ -77,22 +75,24 @@ def evaluate_bank(model, bank, variant_ids, criterion, bs=2048):
     return (loss / len(y), *metrics(y, y_))
 
 
-def train_member(ds, member, epochs=100, batch_size=256):
+def train_member(ds, member, arch='trialcnn', epochs=100, batch_size=256):
     """Train on CLEAN images only; the member's corruptions only determine its preprocessing design."""
     cfg = ENSEMBLE_MEMBERS[member]
-    print(f"Training ensemble member '{member}' ({ARCH}) on {ds} (clean data only), targets: {cfg['corruptions']}")
+    arch = arch.lower()
+    print(f"Training ensemble member '{member}' ({arch}) on {ds} (clean data only), targets: {cfg['corruptions']}")
     train_bank = VariantBank(ds, 'train', cfg, DEVICE)
     test_bank = VariantBank(ds, 'test', cfg, DEVICE)
     test_v = torch.zeros(len(test_bank), dtype=torch.long)
 
-    model = get_model(ARCH, in_channels=1, n_classes=N_CLASSES[ds]).to(DEVICE)
+    model = get_model(arch, in_channels=1, n_classes=N_CLASSES[ds]).to(DEVICE)
     criterion = get_criterion(ds)
     optimizer = optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     scaler = torch.amp.GradScaler('cuda', enabled=(DEVICE.type == 'cuda'))
 
-    modelpath = ckpt_path(ds, member)
-    historyfile = os.path.join(RESULTS, f'history_{ARCH}_{ds.lower()}_ens_{member}.csv')
+    modelpath = ckpt_path(ds, member, arch)
+    # One file per architecture/dataset/member; rows from later runs are appended.
+    historyfile = os.path.join(RESULTS, f'history_{arch}_{ds.lower()}_ensemble_{member}.csv')
     os.makedirs(os.path.dirname(modelpath), exist_ok=True)
     os.makedirs(os.path.dirname(historyfile), exist_ok=True)
 
@@ -128,7 +128,8 @@ def train_member(ds, member, epochs=100, batch_size=256):
         scheduler.step()
 
         history.append({
-            'model': f'{ARCH}_{member}', 'epoch': epoch,
+            'model': f'{arch}_{member}', 'architecture': arch,
+            'dataset': ds, 'member': member, 'epoch': epoch,
             'train loss': trloss, 'train accuracy': tracc,
             'train f1': trf1, 'train precision': trprec, 'train recall': trrec,
             'test loss': tstloss, 'test accuracy': tstacc, 'test f1': tstf1,
@@ -143,18 +144,23 @@ def train_member(ds, member, epochs=100, batch_size=256):
             torch.save(model.state_dict(), modelpath)
             print(f"New best checkpoint saved: {modelpath} | F1 = {bestf1:.4f}")
 
-    pd.DataFrame(history).to_csv(historyfile, index=False)
+    pd.DataFrame(history).to_csv(
+        historyfile,
+        mode='a',
+        header=not os.path.exists(historyfile),
+        index=False,
+    )
 
 
-def load_members(ds, names=None):
+def load_members(ds, arch='trialcnn', names=None):
     """Load trained members for a dataset; missing checkpoints are skipped."""
     members = {}
     for name in (names or ENSEMBLE_MEMBERS):
-        path = ckpt_path(ds, name)
+        path = ckpt_path(ds, name, arch)
         if not os.path.exists(path):
             print(f"[SKIP] Member checkpoint not found: {path}")
             continue
-        model = get_model(ARCH, in_channels=1, n_classes=N_CLASSES[ds]).to(DEVICE)
+        model = get_model(arch, in_channels=1, n_classes=N_CLASSES[ds]).to(DEVICE)
         model.load_state_dict(torch.load(path, map_location=DEVICE))
         members[name] = model.eval()
     return members
@@ -165,7 +171,20 @@ def member_probs(members, raw, bs=2048):
     """Per-member softmax probabilities for raw (N, H, W, 3) uint8 images -> {name: (N, C) tensor on CPU}."""
     probs = {}
     for name, model in members.items():
-        x_all = torch.from_numpy(apply_tform(ENSEMBLE_MEMBERS[name]['tform'], raw))
+        probs[name] = specialist_probs(name, {name: model}, raw, bs)[name]
+    return probs
+
+
+@torch.no_grad()
+def specialist_probs(member, models, raw, bs=2048):
+    """Evaluate several architectures sharing one specialist transform.
+
+    `models` maps any output name to a model. The transform is applied once,
+    then reused for every model, avoiding duplicate CPU preprocessing.
+    """
+    x_all = torch.from_numpy(apply_tform(ENSEMBLE_MEMBERS[member]['tform'], raw))
+    probs = {}
+    for name, model in models.items():
         chunks = []
         for x in x_all.split(bs):
             with torch.amp.autocast('cuda', enabled=DEVICE.type == 'cuda'):
@@ -178,13 +197,15 @@ def member_probs(members, raw, bs=2048):
 CONF_POWER = 4
 
 
-def ensemble_probs(probs, fog=None):
+def ensemble_probs(probs):
     """Confidence-weighted average: each member's weight per sample is (its top probability) ** CONF_POWER.
 
-    fog: optional (N,) tensor of fog scores (src.gating.fog_score); boosts the `fog` member's weight.
+    This intentionally has no corruption detector or corruption-specific routing:
+    every supplied member is evaluated for every input.
     """
     P = torch.stack(list(probs.values()))
     w = P.max(2, keepdim=True).values ** CONF_POWER
-    if fog is not None and 'fog' in probs:
-        w[list(probs).index('fog')] *= torch.exp(FOG_BOOST * torch.as_tensor(fog, dtype=w.dtype))[:, None]
+    # Deliberately disabled fog gate. See src/gating.py for the retained
+    # experimental implementation; do not re-enable under the blind setting.
+    # w[fog_member_index] *= torch.exp(FOG_BOOST * fog_score)[:, None]
     return (w * P).sum(0) / w.sum(0)
