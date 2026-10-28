@@ -1,0 +1,532 @@
+<mxfile host="app.diagrams.net" pages="4">
+  <diagram id="trialcnn" name="1 - TrialCNN">
+    <mxGraphModel dx="2049" dy="1132" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="trialcnn-2" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=22;" value="&lt;b&gt;TrialCNN&lt;/b&gt; &lt;span style=&quot;font-size:14px;color:#666666&quot;&gt;&amp;mdash; custom 3-block CNN &amp;middot; drawn for IMG_SIZE=32, n_classes=43 (flat_sz = 75 &amp;times; (IMG_SIZE//8)&amp;sup2;)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="34" width="2000" x="40" y="14" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontSize=11;" value="Input / Output / Reshape" vertex="1">
+          <mxGeometry height="26" width="140" x="40" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontSize=11;" value="Conv" vertex="1">
+          <mxGeometry height="26" width="140" x="190" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#b1ddf0;strokeColor=#10739e;fontSize=12;fontSize=11;" value="Depthwise Conv" vertex="1">
+          <mxGeometry height="26" width="140" x="340" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontSize=11;" value="BatchNorm" vertex="1">
+          <mxGeometry height="26" width="140" x="490" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontSize=11;" value="Activation" vertex="1">
+          <mxGeometry height="26" width="140" x="640" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontSize=11;" value="Pooling" vertex="1">
+          <mxGeometry height="26" width="140" x="790" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontSize=11;" value="Dropout / StochDepth" vertex="1">
+          <mxGeometry height="26" width="140" x="940" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontSize=11;" value="Linear" vertex="1">
+          <mxGeometry height="26" width="140" x="1090" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#b0e3e6;strokeColor=#0e8088;fontSize=12;fontSize=11;" value="SE branch" vertex="1">
+          <mxGeometry height="26" width="140" x="1240" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;fontSize=11;" value="Composite block" vertex="1">
+          <mxGeometry height="26" width="140" x="1390" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-13" parent="1" style="text;html=1;fontColor=#C00000;fontStyle=1;fontSize=12;align=left;verticalAlign=middle;" value="red dashed line = skip / residual path" vertex="1">
+          <mxGeometry height="26" width="230" x="1540" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" value="&lt;b&gt;Input&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;[B, 3, 32, 32]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="80" width="130" x="40" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-15" parent="1" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;fontSize=13;startSize=30;rounded=1;arcSize=4;fillColor=#eeeeee;strokeColor=#666666;swimlaneFillColor=#ffffff;collapsible=0;" value="block1  (Conv &amp;rarr; BN &amp;rarr; ReLU &amp;rarr; Pool)" vertex="1">
+          <mxGeometry height="350" width="250" x="280" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-16" parent="trialcnn-15" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&lt;b&gt;Conv2d 3 → 25&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;k3 · s1 · p1  →  [B,25,32,32]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-17" parent="trialcnn-15" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" value="&lt;b&gt;BatchNorm2d(25)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,25,32,32]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="104" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-18" parent="trialcnn-15" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;ReLU&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,25,32,32]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="166" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-19" parent="trialcnn-15" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" value="&lt;b&gt;MaxPool2d&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;k2 · s2  →  [B,25,16,16]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="228" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-20" edge="1" parent="trialcnn-15" source="trialcnn-16" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-21" edge="1" parent="trialcnn-15" source="trialcnn-17" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-18" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-22" edge="1" parent="trialcnn-15" source="trialcnn-18" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-23" parent="1" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;fontSize=13;startSize=30;rounded=1;arcSize=4;fillColor=#eeeeee;strokeColor=#666666;swimlaneFillColor=#ffffff;collapsible=0;" value="block2  (+ Dropout 0.2)" vertex="1">
+          <mxGeometry height="350" width="250" x="650" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-24" parent="trialcnn-23" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&lt;b&gt;Conv2d 25 → 50&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;k3 · s1 · p1  →  [B,50,16,16]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-25" parent="trialcnn-23" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" value="&lt;b&gt;BatchNorm2d(50)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,50,16,16]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="104" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-26" parent="trialcnn-23" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;ReLU&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,50,16,16]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="166" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-27" parent="trialcnn-23" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;Dropout&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;p = 0.2  →  [B,50,16,16]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="228" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-28" parent="trialcnn-23" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" value="&lt;b&gt;MaxPool2d&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;k2 · s2  →  [B,50,8,8]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-29" edge="1" parent="trialcnn-23" source="trialcnn-24" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-25" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-30" edge="1" parent="trialcnn-23" source="trialcnn-25" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-26" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-31" edge="1" parent="trialcnn-23" source="trialcnn-26" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-27" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-32" edge="1" parent="trialcnn-23" source="trialcnn-27" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-28" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-33" parent="1" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;fontSize=13;startSize=30;rounded=1;arcSize=4;fillColor=#eeeeee;strokeColor=#666666;swimlaneFillColor=#ffffff;collapsible=0;" value="block3  (Conv &amp;rarr; BN &amp;rarr; ReLU &amp;rarr; Pool)" vertex="1">
+          <mxGeometry height="350" width="250" x="1020" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-34" parent="trialcnn-33" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&lt;b&gt;Conv2d 50 → 75&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;k3 · s1 · p1  →  [B,75,8,8]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-35" parent="trialcnn-33" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" value="&lt;b&gt;BatchNorm2d(75)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,75,8,8]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="104" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-36" parent="trialcnn-33" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;ReLU&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,75,8,8]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="166" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-37" parent="trialcnn-33" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" value="&lt;b&gt;MaxPool2d&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;k2 · s2  →  [B,75,4,4]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="228" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-38" edge="1" parent="trialcnn-33" source="trialcnn-34" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-35" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-39" edge="1" parent="trialcnn-33" source="trialcnn-35" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-36" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-40" edge="1" parent="trialcnn-33" source="trialcnn-36" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-37" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-41" parent="1" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;fontSize=13;startSize=30;rounded=1;arcSize=4;fillColor=#eeeeee;strokeColor=#666666;swimlaneFillColor=#ffffff;collapsible=0;" value="fin  (classifier head)" vertex="1">
+          <mxGeometry height="350" width="250" x="1390" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-42" parent="trialcnn-41" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" value="&lt;b&gt;Flatten&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,1200]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-43" parent="trialcnn-41" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&lt;b&gt;Linear 1200 → 512&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,512]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="104" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-44" parent="trialcnn-41" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b&gt;Dropout&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;p = 0.3 (placed BEFORE ReLU, as coded)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="166" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-45" parent="trialcnn-41" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;ReLU&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,512]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="228" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-46" parent="trialcnn-41" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&lt;b&gt;Linear 512 → n_classes&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;→ [B,43]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="46" width="222" x="14" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-47" edge="1" parent="trialcnn-41" source="trialcnn-42" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-43" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-48" edge="1" parent="trialcnn-41" source="trialcnn-43" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-44" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-49" edge="1" parent="trialcnn-41" source="trialcnn-44" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-45" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-50" edge="1" parent="trialcnn-41" source="trialcnn-45" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=1.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-46" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-51" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" value="&lt;b&gt;Logits&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;[B, n_classes=43]&lt;/span&gt;" vertex="1">
+          <mxGeometry height="80" width="130" x="1760" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-52" edge="1" parent="1" source="trialcnn-14" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-15" value="[B,3,32,32]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-53" edge="1" parent="1" source="trialcnn-15" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-23" value="[B,25,16,16]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-54" edge="1" parent="1" source="trialcnn-23" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-33" value="[B,50,8,8]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-55" edge="1" parent="1" source="trialcnn-33" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-41" value="[B,75,4,4]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-56" edge="1" parent="1" source="trialcnn-41" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" target="trialcnn-51" value="[B,43]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="trialcnn-57" parent="1" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fontSize=12;fillColor=#fffbe6;strokeColor=#d6b656;" value="&lt;b&gt;Notes&lt;/b&gt;&lt;br&gt;&amp;bull; flat_sz = 75 &amp;times; (IMG_SIZE//8)&amp;sup2; = 1200 for IMG_SIZE=32 &amp;mdash; update the Flatten / Linear labels if your config differs.&lt;br&gt;&amp;bull; Three 2&amp;times;2 max-pools &amp;rarr; spatial size /8. Every conv is 3&amp;times;3, stride 1, padding 1 (size-preserving).&lt;br&gt;&amp;bull; Trainable parameters &amp;asymp; 683,096 (IMG_SIZE=32, n_classes=43)." vertex="1">
+          <mxGeometry height="120" width="760" x="40" y="510" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="resnet18" name="2 - ResNet-18">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="resnet18-2" value="&lt;b&gt;ResNet-18&lt;/b&gt; &lt;span style=&quot;font-size:14px;color:#666666&quot;&gt;&amp;mdash; residual learning &amp;middot; input 224&amp;times;224, output n_classes logits&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=22;" vertex="1" parent="1">
+          <mxGeometry x="40" y="14" width="2000" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-3" value="Input / Output" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-4" value="Conv (+ BN, activation)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="230" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-5" value="Group of blocks" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="420" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-6" value="Pool + classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="610" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-7" value="red dashed line = skip connection" style="text;html=1;fontColor=#C00000;fontStyle=1;fontSize=12;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="800" y="60" width="260" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-8" value="&lt;b&gt;1. Overall architecture&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontColor=#23445d;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="900" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-9" value="&lt;b&gt;Input&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;[B, 3, 224, 224]&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="160" width="130" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-10" value="&lt;b&gt;Stem&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;7×7 Conv s2 + BN + ReLU&lt;br&gt;3×3 MaxPool s2&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="265" y="160" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-11" value="&lt;b&gt;layer1&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;2 × BasicBlock&lt;br&gt;64 channels&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="510" y="160" width="130" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-12" value="&lt;b&gt;layer2&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;2 × BasicBlock&lt;br&gt;128 channels&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="735" y="160" width="130" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-13" value="&lt;b&gt;layer3&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;2 × BasicBlock&lt;br&gt;256 channels&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="960" y="160" width="130" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-14" value="&lt;b&gt;layer4&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;2 × BasicBlock&lt;br&gt;512 channels&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1185" y="160" width="130" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-15" value="&lt;b&gt;Head&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;Global AvgPool&lt;br&gt;Linear 512 → n_classes&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="160" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-16" value="&lt;b&gt;Logits&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;[B, n_classes]&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1665" y="160" width="110" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-17" value="[B,3,224,224]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-9" target="resnet18-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-18" value="[B,64,56,56]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-10" target="resnet18-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-19" value="[B,64,56,56]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-11" target="resnet18-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-20" value="[B,128,28,28]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-12" target="resnet18-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-21" value="[B,256,14,14]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-13" target="resnet18-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-22" value="[B,512,7,7]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-14" target="resnet18-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-23" value="[B,n_classes]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-15" target="resnet18-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-24" value="&lt;b&gt;2. Inside one BasicBlock (the repeating unit)&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontColor=#23445d;" vertex="1" parent="1">
+          <mxGeometry x="40" y="330" width="900" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-25" value="&lt;b&gt;x&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;input features&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="450" width="120" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-26" value="&lt;b&gt;3×3 Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;+ BN + ReLU&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="204" y="450" width="150" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-27" value="&lt;b&gt;3×3 Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;+ BN&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="398" y="450" width="150" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-28" value="+" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#C00000;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#C00000;" vertex="1" parent="1">
+          <mxGeometry x="602" y="462" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-29" value="&lt;b&gt;ReLU&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="676" y="450" width="100" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-30" value="&lt;b&gt;out&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;F(x) + x&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="820" y="450" width="120" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-31" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-25" target="resnet18-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-32" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-26" target="resnet18-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-33" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-27" target="resnet18-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-34" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-28" target="resnet18-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-35" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="resnet18-29" target="resnet18-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resnet18-36" value="identity shortcut: x" style="html=1;endArrow=block;endFill=1;strokeColor=#C00000;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="resnet18-25" target="resnet18-28">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="100" y="395" />
+              <mxPoint x="622" y="395" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="resnet18-37" value="&lt;b&gt;Key points for viva&lt;/b&gt;&lt;br&gt;&amp;bull; The block learns a residual F(x) and outputs F(x) + x, so gradients flow through the skip path and deep nets train easily.&lt;br&gt;&amp;bull; 4 stages (64 &amp;rarr; 128 &amp;rarr; 256 &amp;rarr; 512 channels); each stage after the first halves the resolution (stride 2) and uses a 1&amp;times;1 conv on the skip path to match shapes.&lt;br&gt;&amp;bull; 8 BasicBlocks &amp;times; 2 convs + stem conv + FC = 18 weight layers &amp;middot; &amp;asymp; 11.2 M parameters." style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fontSize=12;fillColor=#fffbe6;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="1100" height="150" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="mobilenetv2" name="3 - MobileNetV2">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mobilenetv2-2" value="&lt;b&gt;MobileNetV2&lt;/b&gt; &lt;span style=&quot;font-size:14px;color:#666666&quot;&gt;&amp;mdash; lightweight &amp;middot; input 224&amp;times;224, output n_classes logits&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=22;" vertex="1" parent="1">
+          <mxGeometry x="40" y="14" width="2000" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-3" value="Input / Output" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-4" value="Conv (+ BN, activation)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="230" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-5" value="Group of blocks" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="420" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-6" value="Depthwise Conv" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#b1ddf0;strokeColor=#10739e;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="610" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-7" value="Pool + classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-8" value="red dashed line = skip connection" style="text;html=1;fontColor=#C00000;fontStyle=1;fontSize=12;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="990" y="60" width="260" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-9" value="&lt;b&gt;1. Overall architecture&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontColor=#23445d;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="900" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-10" value="&lt;b&gt;Input&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;[B, 3, 224, 224]&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="160" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-11" value="&lt;b&gt;Stem&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;3×3 Conv s2&lt;br&gt;+ BN + ReLU6&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="280" y="160" width="150" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-12" value="&lt;b&gt;7 Inverted-Residual stages&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;17 blocks in total&lt;br&gt;channels 16→24→32→64→96→160→320&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="160" width="260" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-13" value="&lt;b&gt;1×1 Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;320 → 1280&lt;br&gt;+ BN + ReLU6&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="910" y="160" width="150" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-14" value="&lt;b&gt;Head&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;Global AvgPool&lt;br&gt;Dropout 0.2 + Linear&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="160" width="170" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-15" value="&lt;b&gt;Logits&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;[B, n_classes]&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1450" y="160" width="110" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-16" value="[B,3,224,224]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-10" target="mobilenetv2-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-17" value="[B,32,112,112]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-11" target="mobilenetv2-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-18" value="[B,320,7,7]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-12" target="mobilenetv2-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-19" value="[B,1280,7,7]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-13" target="mobilenetv2-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-20" value="[B,n_classes]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-14" target="mobilenetv2-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-21" value="&lt;b&gt;2. Inside one Inverted Residual block (narrow → wide → narrow)&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontColor=#23445d;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="900" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-22" value="&lt;b&gt;x&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;few channels&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="460" width="120" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-23" value="&lt;b&gt;1×1 Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;expand ×6&lt;br&gt;+ BN + ReLU6&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="204" y="460" width="170" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-24" value="&lt;b&gt;3×3 Depthwise Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;+ BN + ReLU6&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#b1ddf0;strokeColor=#10739e;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="418" y="460" width="180" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-25" value="&lt;b&gt;1×1 Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;project (linear)&lt;br&gt;+ BN, no ReLU6&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="642" y="460" width="170" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-26" value="+" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#C00000;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#C00000;" vertex="1" parent="1">
+          <mxGeometry x="866" y="472" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-27" value="&lt;b&gt;out&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;few channels&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="940" y="460" width="120" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-28" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-22" target="mobilenetv2-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-29" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-23" target="mobilenetv2-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-30" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-24" target="mobilenetv2-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-31" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-25" target="mobilenetv2-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-32" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mobilenetv2-26" target="mobilenetv2-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mobilenetv2-33" value="skip (only when stride = 1 and in = out channels)" style="html=1;endArrow=block;endFill=1;strokeColor=#C00000;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="mobilenetv2-22" target="mobilenetv2-26">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="100" y="405" />
+              <mxPoint x="886" y="405" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mobilenetv2-34" value="&lt;b&gt;Key points for viva&lt;/b&gt;&lt;br&gt;&amp;bull; Depthwise separable convolution (3&amp;times;3 depthwise + 1&amp;times;1 pointwise) gives far fewer parameters and FLOPs than a normal conv.&lt;br&gt;&amp;bull; Inverted residual: the skip connects the thin (bottleneck) ends, and the middle is expanded &amp;times;6; the last 1&amp;times;1 is linear so information is not lost.&lt;br&gt;&amp;bull; &amp;asymp; 2.3 M parameters with n_classes = 43." style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fontSize=12;fillColor=#fffbe6;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="40" y="575" width="1100" height="150" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="efficientnetb0" name="4 - EfficientNet-B0">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="efficientnetb0-2" value="&lt;b&gt;EfficientNet-B0&lt;/b&gt; &lt;span style=&quot;font-size:14px;color:#666666&quot;&gt;&amp;mdash; compound-scaled baseline &amp;middot; input 224&amp;times;224, output n_classes logits&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=22;" vertex="1" parent="1">
+          <mxGeometry x="40" y="14" width="2000" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-3" value="Input / Output" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-4" value="Conv (+ BN, activation)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="230" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-5" value="Group of blocks" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="420" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-6" value="Depthwise Conv" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#b1ddf0;strokeColor=#10739e;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="610" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-7" value="Squeeze-and-Excitation" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#b0e3e6;strokeColor=#0e8088;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-8" value="Pool + classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="990" y="60" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-9" value="red dashed line = skip connection" style="text;html=1;fontColor=#C00000;fontStyle=1;fontSize=12;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="60" width="260" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-10" value="&lt;b&gt;1. Overall architecture&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontColor=#23445d;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="900" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-11" value="&lt;b&gt;Input&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;[B, 3, 224, 224]&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="160" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-12" value="&lt;b&gt;Stem&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;3×3 Conv s2&lt;br&gt;+ BN + SiLU&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="280" y="160" width="150" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-13" value="&lt;b&gt;7 MBConv stages&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;16 blocks in total&lt;br&gt;channels 16→24→40→80→112→192→320&lt;br&gt;kernels 3×3 and 5×5&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#bac8d3;strokeColor=#23445d;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="160" width="280" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-14" value="&lt;b&gt;1×1 Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;320 → 1280&lt;br&gt;+ BN + SiLU&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="930" y="160" width="150" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-15" value="&lt;b&gt;Head&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;Global AvgPool&lt;br&gt;Dropout 0.2 + Linear&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="160" width="170" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-16" value="&lt;b&gt;Logits&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;[B, n_classes]&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="160" width="110" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-17" value="[B,3,224,224]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-11" target="efficientnetb0-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-18" value="[B,32,112,112]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-12" target="efficientnetb0-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-19" value="[B,320,7,7]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-13" target="efficientnetb0-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-20" value="[B,1280,7,7]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-14" target="efficientnetb0-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-21" value="[B,n_classes]" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-15" target="efficientnetb0-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-22" value="&lt;b&gt;2. Inside one MBConv block&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontColor=#23445d;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="900" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-23" value="&lt;b&gt;x&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;input features&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="460" width="110" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-24" value="&lt;b&gt;1×1 Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;expand ×6&lt;br&gt;+ BN + SiLU&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="190" y="460" width="150" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-25" value="&lt;b&gt;k×k Depthwise Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;k = 3 or 5&lt;br&gt;+ BN + SiLU&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#b1ddf0;strokeColor=#10739e;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="380" y="460" width="160" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-26" value="&lt;b&gt;Squeeze-and-Excite&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;GAP → FC → FC&lt;br&gt;→ channel re-scaling&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#b0e3e6;strokeColor=#0e8088;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="580" y="460" width="170" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-27" value="&lt;b&gt;1×1 Conv&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#444444&quot;&gt;project + BN&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="790" y="460" width="130" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-28" value="+" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#C00000;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#C00000;" vertex="1" parent="1">
+          <mxGeometry x="970" y="472" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-29" value="&lt;b&gt;out&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="460" width="90" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-30" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-23" target="efficientnetb0-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-31" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-24" target="efficientnetb0-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-32" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-25" target="efficientnetb0-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-33" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-26" target="efficientnetb0-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-34" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-27" target="efficientnetb0-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-35" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#333333;strokeWidth=2;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="efficientnetb0-28" target="efficientnetb0-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="efficientnetb0-36" value="skip (only when stride = 1 and in = out channels)" style="html=1;endArrow=block;endFill=1;strokeColor=#C00000;strokeWidth=2.5;fontFamily=Courier New;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="efficientnetb0-23" target="efficientnetb0-28">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="95" y="405" />
+              <mxPoint x="990" y="405" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="efficientnetb0-37" value="&lt;b&gt;Key points for viva&lt;/b&gt;&lt;br&gt;&amp;bull; Compound scaling: depth, width and resolution are scaled together with one coefficient; B0 is the baseline network found by NAS.&lt;br&gt;&amp;bull; MBConv = MobileNetV2 inverted residual + Squeeze-and-Excitation (learns which channels matter) + SiLU activation.&lt;br&gt;&amp;bull; &amp;asymp; 4.1 M parameters with n_classes = 43." style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fontSize=12;fillColor=#fffbe6;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="40" y="575" width="1100" height="170" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

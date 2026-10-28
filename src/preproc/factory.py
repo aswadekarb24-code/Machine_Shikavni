@@ -22,24 +22,25 @@ datamp ={
     'CTSD': {'train' : c_traindat, 'test': c_testdat,'n_classes':58},
 }
 
-def getloader(dataset, batch_size = BATCH_SIZE, useprob=False, cprob=0.5):
+def getloader(dataset, batch_size=BATCH_SIZE, useprob=False, cprob=0.5, transform_name='robust'):
     conf = datamp.get(dataset,None)
     if conf is None:
         raise ValueError("Dataset does not have torch dataset")
 
     train,test = conf['train'],conf['test']
     if os.path.exists(EXTDIR):
-        train, test = pre_cdata(dataset,'train', useprob,cprob), pre_cdata(dataset,'test', useprob,cprob)
+        train = pre_cdata(dataset, 'train', useprob, cprob, transform_name)
+        test = pre_cdata(dataset, 'test', useprob, cprob, transform_name)
     elif useprob:
         train = ProbabilisticCorruptData(train,cprob=cprob,transform=tform)
 
     trainld = DataLoader(
         train, batch_size=batch_size,shuffle=True,
-        num_workers=4,pin_memory=True
+        num_workers=4, pin_memory=True, persistent_workers=True
     )
     testld = DataLoader(
         test, batch_size=batch_size,shuffle=False,
-        num_workers=4,pin_memory=True
+        num_workers=4, pin_memory=True, persistent_workers=True
     )
     return trainld,testld,conf['n_classes']
     

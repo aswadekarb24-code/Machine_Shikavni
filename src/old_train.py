@@ -8,8 +8,12 @@ from src.config import BATCH_SIZE, CHECKPOINT, RESULTS
 from src.models.factory import get_model
 from src.models.helper import get_criterion
 from src.preproc.factory import getloader, get_fulllloader
+from src.noises.precorrupt import transform_spec
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+# Change only this line to switch the legacy pipeline: 'robust' or 'train'.
+TRANSFORM_NAME = 'train'
 
 
 def train_1(model, loader, optimizer, criterion, scaler):
@@ -71,12 +75,16 @@ def train(
     useprob=False, 
     cprob=0.5, 
     batch_size=BATCH_SIZE,
-    in_channels=1,
+    transform_name=TRANSFORM_NAME,
     use_full_noise=False,
     pretrained=False
 ):
-    print(f"Training : {model_name} on {datanm} Dataset, noise = {useprob}")
-    trainld, testld, nclasses = getloader(dataset=datanm, batch_size=batch_size, useprob=useprob, cprob=cprob) if not use_full_noise else get_fulllloader(dataset=datanm, batch_size=batch_size)
+    transform, in_channels = transform_spec(transform_name)
+    print(f"Training : {model_name} on {datanm} Dataset, noise = {useprob}, transform = {transform_name}")
+    trainld, testld, nclasses = getloader(
+        dataset=datanm, batch_size=batch_size, useprob=useprob, cprob=cprob,
+        transform_name=transform_name,
+    ) if not use_full_noise else get_fulllloader(dataset=datanm, batch_size=batch_size)
 
     model = get_model(model_name, in_channels=in_channels, n_classes=nclasses, pretrained=pretrained).to(DEVICE)
     criterion = get_criterion(datanm)
@@ -84,7 +92,7 @@ def train(
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     scaler = torch.amp.GradScaler('cuda', enabled=(DEVICE.type == 'cuda'))
 
-    suffix = 'fullnoise' if use_full_noise else 'mixed' if useprob else 'clean'
+    suffix = f"{'fullnoise' if use_full_noise else 'mixed' if useprob else 'clean'}_{transform_name}"
 
     # Checkpoint and history path isolation by model name
     modelpath = os.path.join(CHECKPOINT, f'{model_name.lower()}_{datanm.lower()}_{suffix}.pth')
@@ -131,12 +139,12 @@ if __name__ == '__main__':
     models_to_train = ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
 
     for model_name in models_to_train:
-        for ds in ['GTSRB','BTSD', 'CTSD']:
+        for ds in ['CTSD', 'GTSRB','BTSD']:
             train(
                 datanm=ds, 
                 model_name=model_name, 
-                epochs=100, 
-                useprob=True, 
+                epochs=20 if ds == 'GTSRB' else 50,
+                useprob=False,
                 cprob=0.0, 
                 batch_size=128, 
                 use_full_noise=False,
