@@ -3,7 +3,7 @@
 ## Problem Statement
 Traffic Sign Classification (TSC) under different noise conditions over varying severities. Datasets referred: GTSRB, BTSD, CTSD.
 
-Refer to branch `something` for more verbose details. This branch consists of only code.
+Refer to branch `something` for more verbose details. This branch consists of only code and docs.
 
 
 ## Team : 

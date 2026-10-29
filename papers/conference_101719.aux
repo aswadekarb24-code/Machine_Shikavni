@@ -1,0 +1,95 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{hendrycks2019robustness}
+\citation{resnet}
+\citation{mobilenetv2}
+\citation{efficientnet}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
+\citation{gtsrb}
+\citation{ctsd}
+\citation{btsd_timofte}
+\citation{btsd}
+\citation{hendrycks2019robustness}
+\citation{resnet}
+\citation{mobilenetv2}
+\citation{efficientnet}
+\citation{ensemble_dietterich}
+\citation{jacobs1991adaptive}
+\citation{gtsrb}
+\citation{btsd}
+\citation{ctsd}
+\citation{hendrycks2019robustness}
+\citation{resnet}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Datasets and Noise Taxonomy}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Benchmark Datasets}{2}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Environmental Distortion Categories}{2}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Methodology}{2}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Model Architectures}{2}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:archs}{{\mbox  {IV-A}}{2}{Model Architectures}{subsection.4.1}{}}
+\citation{mobilenetv2}
+\citation{efficientnet}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Model Architectures and Parameter Counts (single-channel input)}}{3}{table.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:architectures}{{I}{3}{Model Architectures and Parameter Counts (single-channel input)}{table.caption.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces TrialCNN architecture (0.68M parameters) --- three convolutional blocks, batch normalization, ReLU, max-pooling, and 512-unit FC head with dropout.}}{4}{figure.caption.2}\protected@file@percent }
+\newlabel{fig:arch_trialcnn}{{1}{4}{TrialCNN architecture (0.68M parameters) --- three convolutional blocks, batch normalization, ReLU, max-pooling, and 512-unit FC head with dropout}{figure.caption.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces ResNet-18 architecture (11.19M parameters), adapted for single-channel $32{\times }32$ input with residual skip connections.}}{5}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:arch_resnet}{{2}{5}{ResNet-18 architecture (11.19M parameters), adapted for single-channel $32{\times }32$ input with residual skip connections}{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces MobileNetV2 architecture (2.28M parameters), using inverted residual bottlenecks and depthwise-separable convolutions.}}{6}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:arch_mobilenet}{{3}{6}{MobileNetV2 architecture (2.28M parameters), using inverted residual bottlenecks and depthwise-separable convolutions}{figure.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces EfficientNet-B0 architecture (4.06M parameters), using compound-scaled MBConv blocks with squeeze-and-excitation attention.}}{7}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:arch_efficientnet}{{4}{7}{EfficientNet-B0 architecture (4.06M parameters), using compound-scaled MBConv blocks with squeeze-and-excitation attention}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Phase 1 — RGB Augmentation Baseline (\texttt  {train\_tform})}{8}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:phase1}{{\mbox  {IV-B}}{8}{Phase 1 — RGB Augmentation Baseline (\texttt {train\_tform})}{subsection.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Phase 2 — Robust Preprocessing Shield (\texttt  {tform\_robust})}{8}{subsection.4.3}\protected@file@percent }
+\newlabel{sec:phase2}{{\mbox  {IV-C}}{8}{Phase 2 — Robust Preprocessing Shield (\texttt {tform\_robust})}{subsection.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Phase 3 — Corruption-Specialist Ensemble}{8}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:phase3}{{\mbox  {IV-D}}{8}{Phase 3 — Corruption-Specialist Ensemble}{subsection.4.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-D}1}Specialist Preprocessing Transforms}{8}{subsubsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-D}2}Specialist Training}{8}{subsubsection.4.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-D}3}Confidence-Weighted Ensemble Fusion}{8}{subsubsection.4.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Training Setup (all phases)}{8}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-F}}Noise Robustness Evaluation Protocol}{8}{subsection.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {V}Results}{8}{section.5}\protected@file@percent }
+\newlabel{sec:results}{{V}{8}{Results}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Phase 1 vs.\ Phase 2: Preprocessing Pipeline Comparison}{8}{subsection.5.1}\protected@file@percent }
+\citation{hendrycks2019robustness}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Phase 1 vs.\ Phase 2 Preprocessing: Best Test F1 on Clean Data and Mean Accuracy Under All Corruptions (averaged over GTSRB, BTSD, CTSD)}}{9}{table.caption.6}\protected@file@percent }
+\newlabel{tab:phase1_phase2}{{II}{9}{Phase 1 vs.\ Phase 2 Preprocessing: Best Test F1 on Clean Data and Mean Accuracy Under All Corruptions (averaged over GTSRB, BTSD, CTSD)}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Phase 3: Specialist Member Training Summary}{9}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Ensemble-32 vs.\ Single Specialist Models}{9}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Per-Corruption Breakdown of Ensemble-32}{9}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{9}{section.6}\protected@file@percent }
+\newlabel{sec:discussion}{{VI}{9}{Discussion}{section.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Mean corrupted accuracy across the three preprocessing phases for each architecture. The dashed line marks the Ensemble-32 result (88.0\%), which aggregates all Phase~3 specialists.}}{10}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:pipeline_comparison}{{5}{10}{Mean corrupted accuracy across the three preprocessing phases for each architecture. The dashed line marks the Ensemble-32 result (88.0\%), which aggregates all Phase~3 specialists}{figure.caption.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Specialist Member Best-Checkpoint Test F1 (\%). Mean over 8 preprocessing variants; parentheses show the best single member's F1 and preprocessing type.}}{10}{table.caption.8}\protected@file@percent }
+\newlabel{tab:specialist_summary}{{III}{10}{Specialist Member Best-Checkpoint Test F1 (\%). Mean over 8 preprocessing variants; parentheses show the best single member's F1 and preprocessing type}{table.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Best-checkpoint test F1 heatmap for all $4\times 8$ specialist models across three datasets. Color scale: green~=~high F1, red~=~low F1.}}{10}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:specialist_heatmap}{{6}{10}{Best-checkpoint test F1 heatmap for all $4\times 8$ specialist models across three datasets. Color scale: green~=~high F1, red~=~low F1}{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Mean corrupted accuracy per dataset for Ensemble-32 and the top single specialist models. Dashed line marks Ensemble-32's average.}}{11}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:ensemble_vs_single}{{7}{11}{Mean corrupted accuracy per dataset for Ensemble-32 and the top single specialist models. Dashed line marks Ensemble-32's average}{figure.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Ensemble-32 per-corruption mean accuracy for each dataset and overall. Corruptions sorted by overall mean accuracy (ascending).}}{11}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:per_corruption_ensemble}{{8}{11}{Ensemble-32 per-corruption mean accuracy for each dataset and overall. Corruptions sorted by overall mean accuracy (ascending)}{figure.caption.13}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Mean Corrupted Accuracy (\%) of Ensemble-32 vs.\ Top Single Specialist Models, averaged over all 14 corruption types and 5 severity levels.}}{12}{table.caption.10}\protected@file@percent }
+\newlabel{tab:ensemble_vs_single}{{IV}{12}{Mean Corrupted Accuracy (\%) of Ensemble-32 vs.\ Top Single Specialist Models, averaged over all 14 corruption types and 5 severity levels}{table.caption.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces Ensemble-32 Mean Accuracy (\%) and Weighted F1 per Corruption Type, averaged over the three datasets and all 5 severity levels.}}{12}{table.caption.12}\protected@file@percent }
+\newlabel{tab:per_corruption}{{V}{12}{Ensemble-32 Mean Accuracy (\%) and Weighted F1 per Corruption Type, averaged over the three datasets and all 5 severity levels}{table.caption.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Limitations and Future Work}{12}{section.7}\protected@file@percent }
+\newlabel{sec:future}{{VII}{12}{Limitations and Future Work}{section.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Conclusion}{12}{section.8}\protected@file@percent }
+\bibcite{gtsrb}{1}
+\bibcite{hendrycks2019robustness}{2}
+\bibcite{ctsd}{3}
+\bibcite{btsd}{4}
+\bibcite{btsd_timofte}{5}
+\bibcite{resnet}{6}
+\bibcite{mobilenetv2}{7}
+\bibcite{efficientnet}{8}
+\bibcite{ensemble_dietterich}{9}
+\bibcite{jacobs1991adaptive}{10}
+\@writefile{toc}{\contentsline {section}{References}{13}{section*.15}\protected@file@percent }
+\gdef \@abspage@last{13}

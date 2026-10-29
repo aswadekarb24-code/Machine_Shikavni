@@ -1,0 +1,129 @@
+
+
+% ============================================================
+% TABLE: Phase 1 vs Phase 2
+% ============================================================
+
+\begin{table}[htbp]
+\caption{Phase 1 vs.\ Phase 2 Preprocessing: Best Test F1 on Clean Data and Mean Accuracy Under All Corruptions (averaged over GTSRB, BTSD, CTSD)}
+\label{tab:phase1_phase2}
+\begin{center}
+\setlength\tabcolsep{4pt}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \multicolumn{2}{c}{\textbf{Phase 1 (train\_tform)}} & \multicolumn{2}{c}{\textbf{Phase 2 (robust shield)}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & Clean F1 & Corr.\ Acc. & Clean F1 & Corr.\ Acc. \\
+\midrule
+TrialCNN & 95.98 & 74.89 & 97.53 & 80.22 (+5.3\%) \\
+ResNet-18 & 95.46 & 76.20 & 95.69 & 77.03 (+0.8\%) \\
+EfficientNet-B0 & 90.69 & 69.14 & 91.56 & 70.23 (+1.1\%) \\
+MobileNetV2 & 85.64 & 61.68 & 86.62 & 57.48 (-4.2\%) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+
+% ============================================================
+% TABLE: Specialist Summary
+% ============================================================
+
+\begin{table}[htbp]
+\caption{Specialist Member Best-Checkpoint Test F1 (mean over 8 preprocessing variants). Numbers in parentheses show the best single member.}
+\label{tab:specialist_summary}
+\begin{center}
+\setlength\tabcolsep{4pt}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Architecture} & \textbf{BTSD} & \textbf{CTSD} & \textbf{GTSRB} & \textbf{Avg.} \\
+\midrule
+TrialCNN & 92.08 (93.74\,\textit{Light}) & 99.98 (100.00\,\textit{Defocus}) & 97.50 (98.72\,\textit{Weather}) & 96.52 \\
+ResNet-18 & 86.73 (88.98\,\textit{Weather}) & 99.90 (100.00\,\textit{Fog}) & 96.25 (97.71\,\textit{Light}) & 94.29 \\
+EfficientNet-B0 & 73.83 (79.86\,\textit{Defocus}) & 99.39 (99.83\,\textit{Motion}) & 95.34 (97.07\,\textit{Light}) & 89.52 \\
+MobileNetV2 & 54.49 (66.80\,\textit{Defocus}) & 97.39 (98.14\,\textit{Defocus}) & 93.81 (96.07\,\textit{Motion}) & 81.89 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+
+% ============================================================
+% TABLE: Ensemble vs Single
+% ============================================================
+
+\begin{table}[htbp]
+\caption{Mean Corrupted Accuracy (\%) of Ensemble-32 vs.\ Top Single Specialist Models. Averaged over all 14 corruption types and 5 severity levels.}
+\label{tab:ensemble_vs_single}
+\begin{center}
+\setlength\tabcolsep{4pt}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{BTSD} & \textbf{CTSD} & \textbf{GTSRB} & \textbf{Avg.} \\
+\midrule
+\rowcolor{gray!10}
+\textbf{Ensemble-32} (32 members) & 87.92 & 92.15 & 84.03 & 88.03 \\
+TrialCNN / Motion & 85.94 & 92.49 & 77.82 & 85.42 \\
+ResNet-18 / Motion & 83.82 & 90.64 & 77.61 & 84.02 \\
+TrialCNN / Light & 83.79 & 89.98 & 75.70 & 83.16 \\
+TrialCNN / Weather & 82.62 & 86.70 & 77.98 & 82.44 \\
+ResNet-18 / Light & 82.45 & 87.75 & 76.99 & 82.40 \\
+TrialCNN / Generalist & 81.35 & 87.88 & 77.73 & 82.32 \\
+TrialCNN / Fog & 83.28 & 87.82 & 75.33 & 82.14 \\
+ResNet-18 / Fog & 82.31 & 89.19 & 74.08 & 81.86 \\
+TrialCNN / Noise & 79.50 & 83.53 & 78.73 & 80.58 \\
+TrialCNN / Defocus & 80.00 & 84.67 & 75.64 & 80.10 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize Full results: \url{https://github.com/aswadekarb24/Machine_Shikavni}} \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+% ============================================================
+% TABLE: Per Corruption
+% ============================================================
+
+\begin{table}[htbp]
+\caption{Ensemble-32 Mean Accuracy (\%) and Weighted F1 per Corruption Type, averaged over the three datasets and all 5 severity levels.}
+\label{tab:per_corruption}
+\begin{center}
+\setlength\tabcolsep{5pt}
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+\textbf{Corruption} & \textbf{Accuracy (\%)} & \textbf{Weighted F1} \\
+\midrule
+Zoom Blur & 98.65 & 0.9862 \\
+Pixelate & 98.42 & 0.9841 \\
+JPEG Compression & 97.81 & 0.9781 \\
+Shot Noise & 96.61 & 0.9658 \\
+Brightness & 96.56 & 0.9658 \\
+Impulse Noise & 93.89 & 0.9391 \\
+Gaussian Noise & 93.72 & 0.9375 \\
+Elastic Transform & 92.64 & 0.9268 \\
+Frost & 87.82 & 0.8811 \\
+Snow & 82.14 & 0.8216 \\
+Contrast & 81.76 & 0.8399 \\
+Defocus Blur & 78.19 & 0.7890 \\
+Motion Blur & 75.80 & 0.7584 \\
+Fog & 58.48 & 0.6114 \\
+\midrule
+\textbf{Mean} & 88.04 & 0.8846 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+
+% ============================================================
+% INFO: Ensemble Clean Accuracy
+% ============================================================
+
+Dataset  accuracy  f1 score
+   BTSD  0.977544  0.977328
+   CTSD  1.000000  1.000000
+  GTSRB  0.997434  0.997431
