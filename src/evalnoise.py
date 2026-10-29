@@ -1,4 +1,3 @@
-"""Resumable full-dataset evaluation of the 32-member cross-architecture ensemble."""
 import os
 
 import numpy as np
@@ -137,12 +136,9 @@ def evaluate_dataset(ds, completed):
         ])
         all_probs = {}
         for member_name in ENSEMBLE_MEMBERS:
-            # All four architectures share this member's preprocessing. Apply
-            # it once instead of four times, then evaluate the four models.
+            # reuse same transform for all 4 archs
             models = {arch: members_by_arch[arch][member_name] for arch in ARCHITECTURES}
             probs_by_arch = specialist_probs(member_name, models, raw)
-            # Persist one result at a time. An interruption can leave only the
-            # in-flight member unfinished; completed rows remain durable.
             for arch, probs in probs_by_arch.items():
                 model_name = f'{arch}_{member_name}'
                 all_probs[model_name] = probs
@@ -151,10 +147,6 @@ def evaluate_dataset(ds, completed):
                 save_progress(completed)
                 print(f'[{ds} {number:02d}/71] {corr} severity {sev} | {model_name} complete')
 
-        # Strict blind setting: every member always runs and weights depend only
-        # on its predicted probabilities. The handcrafted fog gate is retained
-        # in src.gating for reference but deliberately not used here.
-        # ensemble = ensemble_probs(all_probs, fog_score(raw, ds))
         ensemble = ensemble_probs(all_probs)
         ensemble_row, ypred = row_for_probs(GLOBAL_ENSEMBLE, ds, corr, sev, ensemble, ytrue, yt, weight)
         append_rows([ensemble_row], completed)

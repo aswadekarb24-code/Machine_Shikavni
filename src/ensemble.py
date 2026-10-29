@@ -1,7 +1,3 @@
-"""Architecture-agnostic specialist ensembles with member-specific preprocessing.
-
-Prediction = confidence-weighted mean of the members' softmax probabilities.
-"""
 import os
 
 import pandas as pd
@@ -177,10 +173,7 @@ def member_probs(members, raw, bs=2048):
 
 @torch.no_grad()
 def specialist_probs(member, models, raw, bs=2048):
-    """Evaluate several architectures sharing one specialist transform.
-
-    `models` maps any output name to a model. The transform is applied once,
-    then reused for every model, avoiding duplicate CPU preprocessing.
+    """Evaluate several architectures sharing one specialist transform. (avoids recomputation)
     """
     x_all = torch.from_numpy(apply_tform(ENSEMBLE_MEMBERS[member]['tform'], raw))
     probs = {}
@@ -199,13 +192,7 @@ CONF_POWER = 4
 
 def ensemble_probs(probs):
     """Confidence-weighted average: each member's weight per sample is (its top probability) ** CONF_POWER.
-
-    This intentionally has no corruption detector or corruption-specific routing:
-    every supplied member is evaluated for every input.
     """
     P = torch.stack(list(probs.values()))
     w = P.max(2, keepdim=True).values ** CONF_POWER
-    # Deliberately disabled fog gate. See src/gating.py for the retained
-    # experimental implementation; do not re-enable under the blind setting.
-    # w[fog_member_index] *= torch.exp(FOG_BOOST * fog_score)[:, None]
     return (w * P).sum(0) / w.sum(0)

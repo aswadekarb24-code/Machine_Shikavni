@@ -15,40 +15,22 @@ from PIL import Image
 
 class RobustPreprocessShield:
     def __call__(self, img):
-        # 1. Convert PIL to OpenCV format (NumPy array)
+        # PIL img -> np array -> grayscale -> blur + CLAHE to combat corruption -> PIL img for torch
         img_np = np.array(img.convert('RGB'))
-        
-        # 2. Convert to Grayscale (removes color-based corruption vulnerabilities)
         gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
-        
-        # 3. Apply Median Blur to kill pixel noise (Shot, Impulse, Gaussian)
-        # A kernel size of 3 is usually enough to kill noise without destroying shapes
         denoised = cv2.medianBlur(gray, 3)
-        
-        # 4. Apply CLAHE to destroy Fog, Contrast, and Brightness issues
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(4,4))
         equalized = clahe.apply(denoised)
-        
-        # 5. Convert back to PIL Image so PyTorch can use it
-        # Note: Image is now 1 channel (grayscale) instead of 3
         return Image.fromarray(equalized)
 
-# Inject the shield into your transformation pipeline
 tform_robust = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
-    RobustPreprocessShield(), # <-- The Magic Happens Here
+    RobustPreprocessShield(),
     transforms.ToImage(),
     transforms.ToDtype(torch.float32, scale=True),
-    # Note: Normalize only needs 1 value now because the image is Grayscale
     transforms.Normalize(mean=[0.5], std=[0.5]) 
 ])
 
-# ---------------------------------------------------------------------------
-# Per-member preprocessing for the corruption-specialist ensemble.
-# Each function maps one IMG_SIZE x IMG_SIZE x 3 uint8 RGB array to a
-# IMG_SIZE x IMG_SIZE uint8 grayscale array. Scaling to [-1, 1] is done by
-# src.preproc.cache.to_input, equivalent to ToDtype(scale) + Normalize(0.5, 0.5).
-# ---------------------------------------------------------------------------
 def _gray(rgb):
     return cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
 

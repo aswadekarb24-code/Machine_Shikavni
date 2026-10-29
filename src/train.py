@@ -134,6 +134,5 @@ if __name__ == '__main__':
 
     for model_name in models_to_train:
         for ds in ['GTSRB','BTSD', 'CTSD']:
-            # Train the same corruption-specialist ensemble for every architecture.
             for member in ENSEMBLE_MEMBERS:
                 train_member(ds, member, arch=model_name, epochs=100, batch_size=256)
