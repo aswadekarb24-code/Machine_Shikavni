@@ -43,7 +43,7 @@ Mumbai, India \\
 Mumbai, India \\
 \href{mailto:ahshimoga_b24@it.vjti.ac.in}{ahshimoga\_b24@it.vjti.ac.in}}
 \and
-\IEEEauthorblockN{3\textsuperscript{rd} Dr. S. S. Udmale (Mentor)}
+\IEEEauthorblockN{4\textsuperscript{th} Dr. S. S. Udmale (Mentor)}
 \IEEEauthorblockA{\textit{Dept. of Computer Engineering and Information Technology} \\
 \textit{Veermata Jijabai Technological Institute (VJTI)}\\
 Mumbai, India \\
@@ -123,7 +123,7 @@ Models are trained exclusively on clean (uncorrupted) data; corruptions are appl
 
 \subsection{Model Architectures}
 \label{sec:archs}
-We compare four CNN architectures (Table~\ref{tab:architectures}, Figs.~\ref{fig:arch_trialcnn}--\ref{fig:arch_efficientnet}). None use ImageNet-pretrained weights; all are trained from scratch so that differences in robustness reflect architectural inductive bias rather than pretrained feature reuse.
+We compare four CNN architectures (Table~\ref{tab:architectures}, Figs.~\ref{fig:arch_trialcnn}--\ref{fig:arch_efficientnet}). High-resolution vector diagrams for all four architectures are embedded below and available online at: \url{https://drive.google.com/file/d/1ADa2bOHRFrxTVuEDO31N8zOI8rhQrcq_/view?usp=sharing}. None use ImageNet-pretrained weights; all are trained from scratch so that differences in robustness reflect architectural inductive bias rather than pretrained feature reuse.
 \begin{itemize}
     \item \textbf{TrialCNN} (custom baseline): a compact three-block CNN with $25\!\to\!50\!\to\!75$ channels, batch normalization, ReLU activations, max-pooling after each block, and a 512-unit fully connected head with dropout ($0.2$--$0.3$). Designed to be a lightweight but strong baseline.
     \item \textbf{ResNet-18}~\cite{resnet}: residual CNN with skip connections, adapted to single-channel input.
@@ -148,43 +148,41 @@ ResNet-18        & 11.19M & No \\
 \end{center}
 \end{table}
 
-% Architecture diagrams: placed as full-page rotated figures for max visibility
+% Architecture diagrams: explicitly constrained to fit within page bounds
+\clearpage
 \begin{figure*}[p]
   \centering
-  \includegraphics[angle=90, width=0.85\textheight, keepaspectratio]{figures/arch_page1_new.pdf}
+  \includegraphics[angle=90, width=0.9\textwidth, height=0.75\textheight, keepaspectratio]{figures/arch_page1_new.pdf}
   \caption{TrialCNN architecture (0.68M parameters) --- three convolutional blocks, batch normalization, ReLU, max-pooling, and 512-unit FC head with dropout.}
   \label{fig:arch_trialcnn}
 \end{figure*}
 
 \clearpage
-
 \begin{figure*}[p]
   \centering
-  \includegraphics[angle=90, width=0.85\textheight, keepaspectratio]{figures/arch_page2_new.pdf}
+  \includegraphics[angle=90, width=0.9\textwidth, height=0.75\textheight, keepaspectratio]{figures/arch_page2_new.pdf}
   \caption{ResNet-18 architecture (11.19M parameters), adapted for single-channel $32{\times}32$ input with residual skip connections.}
   \label{fig:arch_resnet}
 \end{figure*}
 
 \clearpage
-
 \begin{figure*}[p]
   \centering
-  \includegraphics[angle=90, width=0.85\textheight, keepaspectratio]{figures/arch_page3_new.pdf}
+  \includegraphics[angle=90, width=0.9\textwidth, height=0.75\textheight, keepaspectratio]{figures/arch_page3_new.pdf}
   \caption{MobileNetV2 architecture (2.28M parameters), using inverted residual bottlenecks and depthwise-separable convolutions.}
   \label{fig:arch_mobilenet}
 \end{figure*}
 
 \clearpage
-
 \begin{figure*}[p]
   \centering
-  \includegraphics[angle=90, width=0.85\textheight, keepaspectratio]{figures/arch_page4_new.pdf}
+  \includegraphics[angle=90, width=0.9\textwidth, height=0.75\textheight, keepaspectratio]{figures/arch_page4_new.pdf}
   \caption{EfficientNet-B0 architecture (4.06M parameters), using compound-scaled MBConv blocks with squeeze-and-excitation attention.}
   \label{fig:arch_efficientnet}
 \end{figure*}
-
 \clearpage
 
+\noindent\textit{Note: High-resolution full-size architecture diagrams and source vector files for all four models are also archived online at: \url{https://drive.google.com/file/d/1ADa2bOHRFrxTVuEDO31N8zOI8rhQrcq_/view?usp=sharing}}
 
 \subsection{Phase 1 — RGB Augmentation Baseline (\texttt{train\_tform})}
 \label{sec:phase1}
@@ -324,7 +322,7 @@ ResNet-18 / Fog        & 82.31 & 89.19 & 74.08 & 81.86 \\
 TrialCNN / Noise       & 79.50 & 83.53 & 78.73 & 80.58 \\
 TrialCNN / Defocus     & 80.00 & 84.67 & 75.64 & 80.10 \\
 \bottomrule
-\multicolumn{5}{l}{\footnotesize Full results: \url{https://github.com/aswadekarb24/Machine_Shikavni}} \\
+\multicolumn{5}{l}{\footnotesize Full results: \url{https://github.com/aswadekarb24-code/Machine_Shikavni}} \\
 \end{tabular}
 \end{center}
 \end{table*}
@@ -420,6 +418,7 @@ We presented a three-phase progressive robustness study for traffic sign classif
 The central message of this work is that \emph{targeted preprocessing diversity is a more effective and efficient robustness lever than raw architectural capacity for small-resolution traffic sign recognition}: matching each model's input transform to its expected corruption family, and combining the specialists via confidence weighting, extracts corruptionrobustness substantially beyond what any single model -- compact or large -- achieves alone.
 
 All code, checkpoints, and full result tables are available at: \url{https://github.com/aswadekarb24-code/Machine_Shikavni}
+
 % ─────────────────────────────────────────────────────────────────────────────
 \section*{Acknowledgment}
 % ─────────────────────────────────────────────────────────────────────────────
