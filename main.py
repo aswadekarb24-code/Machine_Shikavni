@@ -1,5 +1,5 @@
 def main():
-    print("Hello from ml-proj-handwritten!")
+    print("Hello from ml-proj!")
 
 
 if __name__ == "__main__":
