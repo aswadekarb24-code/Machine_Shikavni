@@ -13,7 +13,7 @@ from src.noises.precorrupt import transform_spec
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Change only this line to switch the legacy pipeline: 'robust' or 'train'.
-TRANSFORM_NAME = 'train'
+TRANSFORM_NAME = 'robust'
 
 
 def train_1(model, loader, optimizer, criterion, scaler):
@@ -136,14 +136,14 @@ def train(
 
 
 if __name__ == '__main__':
-    models_to_train = ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
-
+    # models_to_train = ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
+    models_to_train =['TSRDClassifier']
     for model_name in models_to_train:
-        for ds in ['CTSD', 'GTSRB','BTSD']:
+        for ds in ['BTSD', 'CTSD', 'GTSRB']:
             train(
                 datanm=ds, 
                 model_name=model_name, 
-                epochs=20 if ds == 'GTSRB' else 50,
+                epochs=30 if ds == 'GTSRB' else 120 if 'BTSD' else 80,
                 useprob=False,
                 cprob=0.0, 
                 batch_size=128, 

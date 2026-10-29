@@ -16,7 +16,7 @@ DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 corruptions = list(CORRUPTIONS.keys())
 severities = [1, 2, 3, 4, 5]
 dsets = ['GTSRB','BTSD', 'CTSD']
-models_to_eval = ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
+models_to_eval = ['tsrdclassifier'] # ['trialcnn', 'resnet18', 'mobilenet_v2', 'efficientnet_b0']
 
 dset_n_classes = {
     'GTSRB': 43,
