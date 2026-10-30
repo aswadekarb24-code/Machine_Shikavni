@@ -38,14 +38,6 @@ labelhelp(b_traindat)
 b_testdat = datasets.ImageFolder(root=bdir_test,transform=tform)
 labelhelp(b_testdat)
 
-c_train_loader = DataLoader(c_traindat,batch_size=BATCH_SIZE,shuffle=True, pin_memory=True)
-c_test_loader = DataLoader(c_testdat,batch_size=BATCH_SIZE,shuffle=False, pin_memory=True)
-
-b_train_loader = DataLoader(b_traindat,batch_size=BATCH_SIZE,shuffle=True, pin_memory=True)
-b_test_loader = DataLoader(b_testdat,batch_size=BATCH_SIZE,shuffle=False, pin_memory=True)
-
-g_train_loader = DataLoader(g_traindat,batch_size=BATCH_SIZE,shuffle=True, pin_memory=True)
-g_test_loader = DataLoader(g_testdat,batch_size=BATCH_SIZE,shuffle=False, pin_memory=True)
 
 print(f"CTSD Train samples: {len(c_traindat)}")
 print(f"CTSD Test samples: {len(c_testdat)}")

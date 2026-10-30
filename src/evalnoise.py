@@ -19,21 +19,21 @@ EVAL_SPLITS = ('train', 'test')
 N_CLASSES = {'GTSRB': 43, 'CTSD': 58, 'BTSD': 62}
 
 # Stable paths let a second invocation resume the same evaluation.
-OUTPUT_CSV = os.path.join(RESULTS, 'noise_results_all_ensembles.csv')
+OUTPUT_CSV = os.path.join(RESULTS, 'noise_results_tsrd_research_ensemble.csv')
 LOG_DIR = 'logs'
-PROGRESS_CSV = os.path.join(LOG_DIR, 'eval_ensemble_progress.csv')
-CM_PARTS_DIR = os.path.join(LOG_DIR, 'eval_ensemble_confmat_parts')
+PROGRESS_CSV = os.path.join(LOG_DIR, 'eval_tsrd_ensemble_progress.csv')
+CM_PARTS_DIR = os.path.join(LOG_DIR, 'eval_tsrd_ensemble_confmat_parts')
 COLUMNS = ['Model', 'Dataset', 'Corruption', 'Severity',
            'loss', 'accuracy', 'f1 score', 'precision', 'recall']
-GLOBAL_ENSEMBLE = 'ensemble_32'
+GLOBAL_ENSEMBLE = 'tsrd_ensemble'
 
 
 def conditions():
     return [('none', 0)] + [(corr, sev) for corr in CORRUPTIONS_TO_EVAL for sev in SEVERITIES]
 
 
-def expected_models():
-    return {f'{arch}_{member}' for arch in ARCHITECTURES for member in ENSEMBLE_MEMBERS} | {GLOBAL_ENSEMBLE}
+def expected_models(arches = ARCHITECTURES):
+    return {f'{arch}_{member}' for arch in arches for member in ENSEMBLE_MEMBERS} | {GLOBAL_ENSEMBLE}
 
 
 def part_path(ds, corr, sev):
@@ -71,8 +71,8 @@ def save_array_atomic(path, array):
     os.replace(tmp, path)
 
 
-def save_progress(completed):
-    expected = expected_models()
+def save_progress(completed,arches=ARCHITECTURES):
+    expected = expected_models(arches=arches)
     done_by_condition = {}
     for model, ds, corr, sev in completed:
         done_by_condition.setdefault((ds, corr, sev), set()).add(model)
@@ -102,10 +102,10 @@ def row_for_probs(model_name, ds, corr, sev, probs, ytrue, yt, weight):
              'loss': loss, 'accuracy': acc, 'f1 score': f1, 'precision': prec, 'recall': rec}, ypred)
 
 
-def load_all_members(ds):
+def load_all_members(ds,arches = ARCHITECTURES):
     """Require the intended 32 checkpoints; a partial ensemble is never evaluated silently."""
     members_by_arch = {}
-    for arch in ARCHITECTURES:
+    for arch in arches:
         members = load_members(ds, arch=arch)
         missing = set(ENSEMBLE_MEMBERS) - set(members)
         if missing:
@@ -114,13 +114,13 @@ def load_all_members(ds):
     return members_by_arch
 
 
-def evaluate_dataset(ds, completed):
+def evaluate_dataset(ds, completed,arches=ARCHITECTURES):
     n_cls = N_CLASSES[ds]
-    members_by_arch = load_all_members(ds)
+    members_by_arch = load_all_members(ds,arches=arches)
     ytrue = np.concatenate([labels_of(ds, split) for split in EVAL_SPLITS])
     yt = torch.from_numpy(ytrue)
     weight = get_criterion(ds).weight.cpu()
-    expected = expected_models()
+    expected = expected_models(arches=arches)
 
     for number, (corr, sev) in enumerate(conditions(), start=1):
         done = {model for model, row_ds, row_corr, row_sev in completed
@@ -137,7 +137,7 @@ def evaluate_dataset(ds, completed):
         all_probs = {}
         for member_name in ENSEMBLE_MEMBERS:
             # reuse same transform for all 4 archs
-            models = {arch: members_by_arch[arch][member_name] for arch in ARCHITECTURES}
+            models = {arch: members_by_arch[arch][member_name] for arch in arches}
             probs_by_arch = specialist_probs(member_name, models, raw)
             for arch, probs in probs_by_arch.items():
                 model_name = f'{arch}_{member_name}'
@@ -158,8 +158,8 @@ def evaluate_dataset(ds, completed):
         print(f'[{ds} {number:02d}/71] {corr} severity {sev} | {GLOBAL_ENSEMBLE} complete')
 
 
-def write_final_confusion_matrices(completed):
-    expected = expected_models()
+def write_final_confusion_matrices(completed, arches = ARCHITECTURES):
+    expected = expected_models(arches=arches)
     for ds in DATASETS:
         parts = []
         for corr, sev in conditions():
@@ -183,16 +183,17 @@ def write_final_confusion_matrices(completed):
 
 def main():
     os.makedirs(LOG_DIR, exist_ok=True)
+    arches = ['tsrdclassifier']
     completed = load_completed_rows()
-    save_progress(completed)
-    print(f'Evaluating 32 members + one cross-architecture ensemble on {DEVICE}.')
+    save_progress(completed,arches=arches)
+    print(f'Evaluating {8*len(arches)} members + one cross-architecture ensemble on {DEVICE}.')
     print(f'Resumable metrics CSV: {OUTPUT_CSV}')
     print(f'Progress ledger: {PROGRESS_CSV}')
     for ds in DATASETS:
-        evaluate_dataset(ds, completed)
-    write_final_confusion_matrices(completed)
-    save_progress(completed)
-    if len(completed) == len(DATASETS) * len(conditions()) * len(expected_models()):
+        evaluate_dataset(ds, completed,arches=arches)
+    write_final_confusion_matrices(completed,arches=arches)
+    save_progress(completed,arches=arches)
+    if len(completed) == len(DATASETS) * len(conditions()) * len(expected_models(arches=arches)):
         from src.thresholds import report
         report(OUTPUT_CSV, model=GLOBAL_ENSEMBLE)
 

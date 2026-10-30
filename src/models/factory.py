@@ -1,6 +1,6 @@
 import torch.nn as nn
 from torchvision import models
-from src.models.cnn import TrialCNN
+from src.models.cnn import TrialCNN, TSRDClassifier
 
 
 def get_model(model_name: str, in_channels: int = 3, n_classes: int = 43, pretrained: bool = False):
@@ -41,6 +41,9 @@ def get_model(model_name: str, in_channels: int = 3, n_classes: int = 43, pretra
         in_features = model.classifier[1].in_features
         model.classifier[1] = nn.Linear(in_features, n_classes)
         return model
+    
+    elif name == "tsrdclassifier":
+        return TSRDClassifier(in_channels=in_channels, num_classes=n_classes)
 
     else:
         raise ValueError(f"Unknown model architecture: {model_name}")
